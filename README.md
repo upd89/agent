@@ -1,7 +1,7 @@
 # agent
 upd89 agent
 
-prototyp requirements:
+prototype requirements:
 * python3
 * python3-apt
 
