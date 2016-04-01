@@ -16,7 +16,7 @@ class Packages:
     self.packages.append(package)
 
 class Package:
-  def __init__(self, name, version, arch, baseversion, section, homepage, summary):
+  def __init__(self, name, version, arch, baseversion, section, homepage, summary, repo):
     self.name = name
     self.version = version
     self.architecture = arch
@@ -24,6 +24,7 @@ class Package:
     self.section = section
     self.homepage = homepage
     self.summary = summary
+    self.repository = repo
 
 class MyEncoder(JSONEncoder):
     def default(self, o):
@@ -35,10 +36,13 @@ cache = apt.Cache()
 packages = Packages()
 for pkg in cache:
    if (pkg.is_installed):
+      pkg_base = pkg.versions[-1]
+      pkg_origin = pkg_base.origins[0]
+      repo_string = pkg_origin.origin + "_" + pkg_origin.archive + "_" + pkg_origin.component
       packages.add(Package(name=pkg.name, version=pkg.installed.version,
-                       arch=pkg.architecture(), baseversion=pkg.versions[-1].version,
+                       arch=pkg.architecture(), baseversion=pkg_base.version,
                        section=pkg.section, homepage=pkg.installed.homepage,
-                       summary=pkg.installed.summary))
+                       summary=pkg.installed.summary, repo=repo_string))
 
 print("Sending to server...")
 req = urllib2.Request(url)
