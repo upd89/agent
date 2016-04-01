@@ -5,8 +5,8 @@ from random import randint
 from json import JSONEncoder
 
 urn = 'vm1'
-url = 'http://upd89.org/api.php'
-#url = 'http://cc.upd89.org/v1/system/' + urn + '/updateInstalled'
+#url = 'http://upd89.org/api.php'
+url = 'http://cc.upd89.org/v1/system/' + urn + '/updateInstalled'
 
 class Packages:
   def __init__(self):
@@ -41,7 +41,7 @@ for pkg in cache:
                        summary=pkg.installed.summary))
 
 print("Sending to server...")
-req = urllib2.Request('http://upd89.org/api.php')
+req = urllib2.Request(url)
 req.add_header('Content-Type', 'application/json')
 response = urllib2.urlopen(req, json.dumps(packages, cls=MyEncoder))
 print("Response:")
