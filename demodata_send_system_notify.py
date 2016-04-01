@@ -4,29 +4,9 @@ import os,sys,time,json,urllib2
 from random import randint
 from json import JSONEncoder
 
-class Update:
-  def __init__(self, name, version, arch, repository, baseversion):
-    self.name = name
-    self.version = version
-    self.architecture = arch
-    self.repository = repository
-    self.baseversion = baseversion
-
-class System:
-  def __init__(self, name, urn, os, address, reboot_required):
-    self.name = name
-    self.urn = urn
-    self.os = os
-    self.address = address
-    self.reboot_required = reboot_required
-    self.packageupdates = list()
-
-  def addUpdate(self, update):
-    self.packageupdates.append(update)
-
-class MyEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
+from classes.update import Update
+from classes.system_notify import System
+from classes.encoder import MyEncoder
 
 # Demodata
 urn = 'vm1'
