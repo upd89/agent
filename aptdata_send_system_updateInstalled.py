@@ -2,38 +2,19 @@
 
 import os,sys,time,apt,json,urllib2
 from random import randint
-from json import JSONEncoder
+
+from classes.package import Package
+from classes.packagelist import Packagelist
+from classes.encoder import MyEncoder
 
 urn = 'vm1'
 #url = 'http://upd89.org/api.php'
 url = 'http://cc.upd89.org/v1/system/' + urn + '/updateInstalled'
 
-class Packages:
-  def __init__(self):
-    self.packages = list()
-
-  def add(self, package):
-    self.packages.append(package)
-
-class Package:
-  def __init__(self, name, version, arch, baseversion, section, homepage, summary, repo):
-    self.name = name
-    self.version = version
-    self.architecture = arch
-    self.baseversion = baseversion
-    self.section = section
-    self.homepage = homepage
-    self.summary = summary
-    self.repository = repo
-
-class MyEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
-
 print("Reading local cache...")
 cache = apt.Cache()
 
-packages = Packages()
+packages = Packagelist()
 for pkg in cache:
    if (pkg.is_installed):
       pkg_base = pkg.versions[-1]
