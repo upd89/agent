@@ -1,35 +1,27 @@
 #!/usr/bin/env python
 
 import os,sys,time,apt,json,socket,platform
-import json,urllib2
 
-import tools
+from lib.configloader.configloader import ConfigLoader
 from classes.update import Update
 from classes.system_notify import System
-from classes.encoder import MyEncoder
+import lib.upstream
+import lib.sysinfo
 
+_config = ConfigLoader("config")
+
+# Data
 myHostname = socket.gethostname()
 myURN = 'demo-' + myHostname + '-demo'
 myDistro = ' '.join(platform.linux_distribution())
-myIP = tools.get_ip()
+myIP = lib.sysinfo.get_ip()
 needReboot = os.path.isfile("/var/run/reboot-required")
-
-#url = 'http://upd89.org/api.php'
-url = 'http://cc.upd89.org/v1/system/' + myURN + '/notify'
-
 sys = System(name=myHostname, urn=myURN, os=myDistro, address=myIP, reboot_required=needReboot)
 
-#if os.geteuid() != 0:
-#    exit("You need to have root privileges to run this script.")
+url = lib.upstream.getSystemNotifyURL(_config, myURN)
 
 print("Reading local cache...")
 cache = apt.Cache()
-
-#print("Updating cache...")
-#try:
-#   cache.update()
-#except:
-#   print("had some troubles, but anyway, let's go on...")
 
 print("Reading Upgradable Packages...")
 for pkg in cache:
@@ -46,10 +38,7 @@ for pkg in cache:
            baseversion = pkg_base.version
       ))
 
-print("Sending to server (notify system " + myURN + ")...")
-req = urllib2.Request(url)
-req.add_header('Content-Type', 'application/json')
-response = urllib2.urlopen(req, json.dumps(sys, cls=MyEncoder))
-print("Response:")
-print(response.read())
+print("Sending to server (notify " + myHostname + ")...")
+response = lib.upstream.push(url, sys)
+print("Response:\n" + response)
 

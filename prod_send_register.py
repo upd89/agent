@@ -1,27 +1,23 @@
 #!/usr/bin/env python
 
-import os,sys,time,apt,json,socket,platform
-import urllib2
-from random import randint
+import os,sys,time,apt,socket,platform
 
-import tools
+from lib.configloader.configloader import ConfigLoader
 from classes.system_register import System
-from classes.encoder import MyEncoder
+import lib.upstream
+import lib.sysinfo
 
+_config = ConfigLoader("config")
+url = lib.upstream.getRegisterURL(_config)
+
+# Data
 myHostname = socket.gethostname()
 myURN = 'demo-' + myHostname + '-demo'
 myDistro = ' '.join(platform.linux_distribution())
-myIP = tools.get_ip()
-
-#url = 'http://upd89.org/api.php'
-url = 'http://cc.upd89.org/v1/register'
-
+myIP = lib.sysinfo.get_ip()
 sys = System(name=myHostname, urn=myURN, os=myDistro, address=myIP, tag="")
 
 print("Sending to server (register " + myHostname + ")...")
-req = urllib2.Request(url)
-req.add_header('Content-Type', 'application/json')
-response = urllib2.urlopen(req, json.dumps(sys, cls=MyEncoder))
-print("Response:")
-print(response.read())
+response = lib.upstream.push(url, sys)
+print("Response:\n" + response)
 

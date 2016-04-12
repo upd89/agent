@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
-import os,sys,time,apt,json,socket,urllib2
-from random import randint
+import os,sys,time,apt,socket
 
+from lib.configloader.configloader import ConfigLoader
 from classes.package import Package
 from classes.packagelist import Packagelist
-from classes.encoder import MyEncoder
+import lib.upstream
+
+_config = ConfigLoader("config")
 
 myHostname = socket.gethostname()
 myURN = 'demo-' + myHostname + '-demo'
-
-#url = 'http://upd89.org/api.php'
-url = 'http://cc.upd89.org/v1/system/' + myURN + '/updateInstalled'
+url = lib.upstream.getSystemUpdateInstalledURL(_config, myURN)
 
 print("Reading local cache...")
 cache = apt.Cache()
@@ -27,10 +27,8 @@ for pkg in cache:
                        section=pkg.section, homepage=pkg.installed.homepage,
                        summary=pkg.installed.summary, repo=repo_string))
 
-print("Sending to server...")
-req = urllib2.Request(url)
-req.add_header('Content-Type', 'application/json')
-response = urllib2.urlopen(req, json.dumps(packages, cls=MyEncoder))
-print("Response:")
-print(response.read())
+print("Sending to server (updateInstalled " + myHostname + ")...")
+print(url)
+response = lib.upstream.push(url, packages)
+print("Response:\n" + response)
 
