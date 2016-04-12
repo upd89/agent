@@ -1,4 +1,16 @@
-import socket
+import os, platform, socket
+
+def get_hostname():
+    return socket.gethostname()
+
+def get_urn():
+    return 'demo-' + get_hostname() + '-demo'
+
+def get_distro():
+    return ' '.join(platform.linux_distribution())
+
+def get_reboot_required():
+    return os.path.isfile("/var/run/reboot-required")
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
