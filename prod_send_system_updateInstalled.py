@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
-import apt
-
 from lib.configloader.configloader import ConfigLoader
-from classes.package import Package
-from classes.packagelist import Packagelist
 import lib.upstream
 import lib.sysinfo
+import lib.apt
 
 _config = ConfigLoader("config")
 
@@ -16,19 +13,7 @@ myURN       = lib.sysinfo.get_urn()
 
 url = lib.upstream.getSystemUpdateInstalledURL(_config, myURN)
 
-print("Reading local cache...")
-cache = apt.Cache()
-
-packages = Packagelist()
-for pkg in cache:
-   if (pkg.is_installed):
-      pkg_base = pkg.versions[-1]
-      pkg_origin = pkg_base.origins[0]
-      repo_string = pkg_origin.origin + "_" + pkg_origin.archive + "_" + pkg_origin.component
-      packages.add(Package(name=pkg.name, version=pkg.installed.version,
-                       arch=pkg.architecture(), baseversion=pkg_base.version,
-                       section=pkg.section, homepage=pkg.installed.homepage,
-                       summary=pkg.installed.summary, repo=repo_string))
+packages = lib.apt.getPackageList()
 
 print("Sending to server (updateInstalled " + myHostname + ")...")
 response = lib.upstream.push(url, packages)
