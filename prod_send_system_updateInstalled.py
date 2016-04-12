@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 
-import os,sys,time,apt,socket
+import apt
 
 from lib.configloader.configloader import ConfigLoader
 from classes.package import Package
 from classes.packagelist import Packagelist
 import lib.upstream
+import lib.sysinfo
 
 _config = ConfigLoader("config")
 
-myHostname = socket.gethostname()
-myURN = 'demo-' + myHostname + '-demo'
+# Data
+myHostname  = lib.sysinfo.get_hostname()
+myURN       = lib.sysinfo.get_urn()
+
 url = lib.upstream.getSystemUpdateInstalledURL(_config, myURN)
 
 print("Reading local cache...")
@@ -28,7 +31,6 @@ for pkg in cache:
                        summary=pkg.installed.summary, repo=repo_string))
 
 print("Sending to server (updateInstalled " + myHostname + ")...")
-print(url)
 response = lib.upstream.push(url, packages)
 print("Response:\n" + response)
 

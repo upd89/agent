@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os,sys,time,apt,json,socket,platform
+import apt
 
 from lib.configloader.configloader import ConfigLoader
 from classes.update import Update
@@ -11,11 +11,11 @@ import lib.sysinfo
 _config = ConfigLoader("config")
 
 # Data
-myHostname = socket.gethostname()
-myURN = 'demo-' + myHostname + '-demo'
-myDistro = ' '.join(platform.linux_distribution())
-myIP = lib.sysinfo.get_ip()
-needReboot = os.path.isfile("/var/run/reboot-required")
+myHostname  = lib.sysinfo.get_hostname()
+myURN       = lib.sysinfo.get_urn()
+myDistro    = lib.sysinfo.get_distro()
+myIP        = lib.sysinfo.get_ip()
+needReboot  = lib.sysinfo.get_reboot_required()
 sys = System(name=myHostname, urn=myURN, os=myDistro, address=myIP, reboot_required=needReboot)
 
 url = lib.upstream.getSystemNotifyURL(_config, myURN)
