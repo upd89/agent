@@ -1,0 +1,6 @@
+[server]
+url = http://cc.upd89.org
+
+[api]
+version = /v1
+
