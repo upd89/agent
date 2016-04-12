@@ -7,15 +7,9 @@ import lib.apt
 
 _config = ConfigLoader("config")
 
-# Data
-myHostname  = lib.sysinfo.get_hostname()
-myURN       = lib.sysinfo.get_urn()
-
-url = lib.upstream.getSystemUpdateInstalledURL(_config, myURN)
-
 packages = lib.apt.getPackageList()
 
-print("Sending to server (updateInstalled " + myHostname + ")...")
-response = lib.upstream.push(url, packages)
+print("Sending to server (updateInstalled " + lib.sysinfo.get_hostname() + ")...")
+response = lib.upstream.pushSystemUpdateInstalled(_config, lib.sysinfo.get_urn(), packages)
 print("Response:\n" + response)
 

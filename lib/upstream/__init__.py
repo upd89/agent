@@ -20,3 +20,14 @@ def push(url, data):
   response = urllib2.urlopen(req, json.dumps(data, cls=MyEncoder))
   return response.read()
 
+def pushRegister(_config, sys):
+  url = getRegisterURL(_config)
+  return push(url, sys)
+
+def pushSystemNotify(_config, urn, sys):
+  url = getSystemNotifyURL(_config, urn)
+  return push(url, sys)
+
+def pushSystemUpdateInstalled(_config, urn, packages):
+  url = getSystemUpdateInstalledURL(_config, urn)
+  return push(url, packages)

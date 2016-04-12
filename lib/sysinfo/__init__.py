@@ -1,5 +1,8 @@
 import os, platform, socket
 
+import classes.system_register
+import classes.system_notify
+
 def get_hostname():
     return socket.gethostname()
 
@@ -24,6 +27,23 @@ def get_ip():
         s.close()
     return IP
 
-# also possible:
-# my_ip = load(urlopen('http://jsonip.com'))['ip']
+    # also possible:
+    # my_ip = load(urlopen('http://jsonip.com'))['ip']
+
+def get_register_system():
+    myHostname  = get_hostname()
+    myURN       = get_urn()
+    myDistro    = get_distro()
+    myIP        = get_ip()
+    return classes.system_register.System(name=myHostname, urn=myURN,
+                                   os=myDistro, address=myIP, tag="")
+
+def get_notify_system():
+    myHostname  = get_hostname()
+    myURN       = get_urn()
+    myDistro    = get_distro()
+    myIP        = get_ip()
+    needReboot  = get_reboot_required()
+    return classes.system_notify.System(name=myHostname, urn=myURN,
+             os=myDistro, address=myIP, reboot_required=needReboot)
 
