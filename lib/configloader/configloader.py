@@ -17,6 +17,12 @@ class ConfigLoader:
     def getApiVersion(self):
         return(self.config['api']['version'])
 
+    def getLogFile(self):
+        return(self.config['log']['file'])
+
+    def getPidFile(self):
+        return(self.config['daemon']['pidfile'])
+
     def getUUID(self):
         return self.__ret_if_exists('general', 'my_uuid')
 
