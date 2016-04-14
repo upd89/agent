@@ -8,6 +8,7 @@ from lib.configloader.configloader import ConfigLoader
 import lib.log.log
 import lib.upstream
 import lib.sysinfo
+import lib.apt
 
 _config = ConfigLoader("config")
 log = lib.log.log.Log(_config)
