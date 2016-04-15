@@ -1,5 +1,6 @@
 import logging
 
+
 class Log:
 
     def __init__(self, _config):
@@ -16,4 +17,3 @@ class Log:
 
     def getKeepfds(self):
         return self.keep_fds
-
