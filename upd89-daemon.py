@@ -4,14 +4,14 @@ from time import sleep
 from daemonize import Daemonize
 import schedule
 
-from lib.configloader.configloader import ConfigLoader
-import lib.log.log
+from lib.configloader import ConfigLoader
+import lib.log
 import lib.upstream
 import lib.sysinfo
-import lib.apt
+import lib.pkg
 
 _config = ConfigLoader("config")
-log = lib.log.log.Log(_config)
+log = lib.log.Log(_config)
 logger = log.getLogger()
 pid = _config.getPidFile()
 
@@ -19,7 +19,7 @@ pid = _config.getPidFile()
 def sendSystemNotify():
     logger.debug("Job is working")
     sys = lib.sysinfo.get_notify_system()
-    sys = lib.apt.addUpdates(sys)
+    sys = lib.pkg.addUpdates(sys)
     logger.debug("Sending to server (notify " +
                  lib.sysinfo.get_hostname() + ")...")
     response = lib.upstream.pushSystemNotify(_config,

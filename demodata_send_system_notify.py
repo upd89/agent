@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from lib.configloader.configloader import ConfigLoader
+from lib.configloader import ConfigLoader
 from classes.update import Update
 from classes.system_notify import System
 import lib.upstream

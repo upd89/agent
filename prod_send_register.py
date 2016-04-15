@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from lib.configloader.configloader import ConfigLoader
+from lib.configloader import ConfigLoader
 import lib.upstream
 import lib.sysinfo
 

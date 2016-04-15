@@ -2,7 +2,7 @@
 
 from random import randint
 
-from lib.configloader.configloader import ConfigLoader
+from lib.configloader import ConfigLoader
 from classes.system_register import System
 import lib.upstream
 
