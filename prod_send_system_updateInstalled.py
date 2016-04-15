@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
-from lib.configloader.configloader import ConfigLoader
+from lib.configloader import ConfigLoader
 import lib.upstream
 import lib.sysinfo
-import lib.apt
+import lib.pkg
 
 _config = ConfigLoader("config")
 
-packages = lib.apt.getPackageList()
+packages = lib.pkg.getPackageList()
 
 print("Sending to server (updateInstalled " +
       lib.sysinfo.get_hostname() + ")...")
