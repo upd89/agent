@@ -1,6 +1,7 @@
 import configparser
 import os.path
 
+
 class ConfigLoader:
 
     def __init__(self, configname):

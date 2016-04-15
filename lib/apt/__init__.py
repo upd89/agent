@@ -1,4 +1,5 @@
-import os,apt
+import os
+import apt
 from classes.update import Update
 from classes.package import Package
 from classes.packagelist import Packagelist
