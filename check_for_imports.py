@@ -2,11 +2,12 @@
 
 import imp
 
+
 def check_for(module):
-  try:
-    imp.find_module(module)
-  except ImportError:
-    print(module + " not installed")
+    try:
+        imp.find_module(module)
+    except ImportError:
+        print(module + " not installed")
 
 check_for('os')
 check_for('platform')

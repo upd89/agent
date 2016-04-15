@@ -20,8 +20,11 @@ def sendSystemNotify():
     logger.debug("Job is working")
     sys = lib.sysinfo.get_notify_system()
     sys = lib.apt.addUpdates(sys)
-    logger.debug("Sending to server (notify " + lib.sysinfo.get_hostname() + ")...")
-    response = lib.upstream.pushSystemNotify(_config, lib.sysinfo.get_urn(), sys)
+    logger.debug("Sending to server (notify " +
+                 lib.sysinfo.get_hostname() + ")...")
+    response = lib.upstream.pushSystemNotify(_config,
+                                             lib.sysinfo.get_urn(),
+                                             sys)
     logger.debug("Response:\n" + response)
 
 
@@ -33,5 +36,8 @@ def main():
         sleep(5)
 
 
-daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
+daemon = Daemonize(app="test_app",
+                   pid=pid,
+                   action=main,
+                   keep_fds=log.getKeepfds())
 daemon.start()
