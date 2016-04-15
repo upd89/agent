@@ -11,4 +11,3 @@ sys = lib.sysinfo.get_register_system()
 print("Sending to server (register " + lib.sysinfo.get_hostname() + ")...")
 response = lib.upstream.pushRegister(_config, sys)
 print("Response:\n" + response)
-
