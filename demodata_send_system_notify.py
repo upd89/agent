@@ -14,12 +14,14 @@ sys.addUpdate(Update(name="vim",
                      version="demoupdate",
                      arch="amd64",
                      repository="demorepo",
-                     baseversion="2:7.4.712-2ubuntu4"))
+                     baseversion="2:7.4.712-2ubuntu4",
+                     sha256=""))
 sys.addUpdate(Update(name="dnsutils",
                      version="demoupdate",
                      arch="amd64",
                      repository="demorepo",
-                     baseversion="1:9.9.5.dfsg-11ubuntu1"))
+                     baseversion="1:9.9.5.dfsg-11ubuntu1",
+                     sha256=""))
 
 url = lib.upstream.getSystemNotifyURL(_config, hostname)
 

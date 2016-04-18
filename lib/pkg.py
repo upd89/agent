@@ -30,9 +30,11 @@ def addUpdates(sys):
                 version=pkg.candidate.version,
                 arch=pkg.architecture(),
                 repository=repo_string,
-                baseversion=pkg_base.version
+                baseversion=pkg_base.version,
+                sha256=pkg_base.sha256
             ))
 
+    cache.close()
     return sys
 
 
@@ -56,7 +58,9 @@ def getPackageList():
                 section=pkg.section,
                 homepage=pkg.installed.homepage,
                 summary=pkg.installed.summary,
-                repo=repo_string
+                repo=repo_string,
+                sha256=pkg.installed.sha256
             ))
 
+    cache.close()
     return packages
