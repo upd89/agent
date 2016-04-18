@@ -1,7 +1,7 @@
 class Package:
 
     def __init__(self, name, version, arch, baseversion, section,
-                 homepage, summary, repo):
+                 homepage, summary, repo, sha256):
         self.name = name
         self.version = version
         self.architecture = arch
@@ -10,3 +10,4 @@ class Package:
         self.homepage = homepage
         self.summary = summary
         self.repository = repo
+        self.sha256 = sha256
