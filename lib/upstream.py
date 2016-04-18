@@ -27,8 +27,20 @@ def getTaskNotifyURL(_config, taskid):
 def push(url, data):
     req = urllib2.Request(url)
     req.add_header('Content-Type', 'application/json')
-    response = urllib2.urlopen(req, json.dumps(data, cls=MyEncoder))
-    return response.read()
+
+    answer = ''
+
+    try:
+        response = urllib2.urlopen(req, json.dumps(data, cls=MyEncoder))
+        answer = response.read()
+    except urllib2.HTTPError, e:
+        print('HTTPError = ' + str(e.code))
+    except urllib2.URLError, e:
+        print('URLError = ' + str(e.reason))
+    except Exception:
+        print('generic exception')
+
+    return answer
 
 
 def pushRegister(_config, sys):
