@@ -16,13 +16,18 @@ def display(name):
 
 @get('/:name/edit')
 def edit_form(name):
-    return "edit form " + name
+    form  = "<form method='post'>"
+    form += "<input type=text name=content>"
+    form += "<input type=submit name=submit>"
+    form += "</form>"
+    return "edit form " + name + form
 
 @post('/:name/edit')
 def edit(name):
+    #content = request.forms.get('content')
     if request.POST.get('submit'):
-        print(request.POST['content'])
-    redirect("/%s" % name)
+        return(request.POST['content'])
+    #redirect("/%s" % name)
 
 if __name__ == "__main__":
     run(host='127.0.0.1', port=8080)
