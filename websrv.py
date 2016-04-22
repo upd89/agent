@@ -10,17 +10,17 @@ def index():
 def main():
     return "MainPage"
 
-@get(':name')
+@get('/:name')
 def display(name):
     return "render page " + name
 
-@get(':name/edit')
+@get('/:name/edit')
 def edit_form(name):
     return "edit form " + name
 
-@post(':name/edit')
+@post('/:name/edit')
 def edit(name):
-    if request.POST.get('subit'):
+    if request.POST.get('submit'):
         print(request.POST['content'])
     redirect("/%s" % name)
 
