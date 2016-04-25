@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
+from bottledaemon import daemon_run
 from bottle import get, post, request, run, abort, redirect
 import json
 import lib.persist
+
+import os
+cwd = os.getcwd()
 
 @get('/')
 def index():
@@ -33,13 +37,13 @@ def edit(name):
 
 @post('/task')
 def new_task():
-    tasks = lib.persist.Persist("tasks.data")
+    tasks = lib.persist.Persist(cwd + "tasks.data")
     # TODO: Test if json is valid
     data = json.load(request.body)
-    #tasks.set_key("0", request.body.read())
     tasks.set_key(data.get('task_id').encode("utf8"), request.body.read())
     tasks.close()
     return("ok")
 
 if __name__ == "__main__":
-    run(host='127.0.0.1', port=8080)
+    daemon_run(host='127.0.0.1', port=8080, pidfile = cwd + "/websrv.pid",
+               logfile = cwd + "websrv.log")
