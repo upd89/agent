@@ -38,20 +38,20 @@ def get_ip():
     # my_ip = load(urlopen('http://jsonip.com'))['ip']
 
 
-def get_register_system():
+def get_register_system(port = "8080"):
     myHostname = get_hostname()
     myURN = get_urn()
     myDistro = get_distro()
-    myIP = get_ip()
+    myIP = get_ip() + ":" + port
     return classes.system_register.System(name=myHostname, urn=myURN,
                                           os=myDistro, address=myIP, tag="")
 
 
-def get_notify_system():
+def get_notify_system(port = "8080"):
     myHostname = get_hostname()
     myURN = get_urn()
     myDistro = get_distro()
-    myIP = get_ip()
+    myIP = get_ip() + ":" + port
     needReboot = get_reboot_required()
     return classes.system_notify.System(name=myHostname, urn=myURN,
                                         os=myDistro, address=myIP,
