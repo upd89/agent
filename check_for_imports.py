@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import imp
+import pip
 
 
 def check_for(module):
@@ -8,6 +9,7 @@ def check_for(module):
         imp.find_module(module)
     except ImportError:
         print(module + " not installed")
+        pip.main(['install', module])
 
 check_for('os')
 check_for('platform')
