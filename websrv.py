@@ -4,6 +4,7 @@ from bottledaemon import daemon_run
 from bottle import get, post, request, run, abort, redirect
 import json
 import lib.persist
+import lib.sysinfo
 
 import os
 cwd = os.getcwd()
@@ -45,5 +46,6 @@ def new_task():
     return("ok")
 
 if __name__ == "__main__":
-    daemon_run(host='127.0.0.1', port=8080, pidfile = cwd + "/websrv.pid",
+    my_ip = lib.sysinfo.get_ip()
+    daemon_run(host=my_ip, port=8080, pidfile = cwd + "/websrv.pid",
                logfile = cwd + "websrv.log")
