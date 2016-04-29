@@ -38,7 +38,7 @@ def get_ip():
     # my_ip = load(urlopen('http://jsonip.com'))['ip']
 
 
-def get_register_system(port = "8080"):
+def get_register_system(port="8080"):
     myHostname = get_hostname()
     myURN = get_urn()
     myDistro = get_distro()
@@ -47,7 +47,7 @@ def get_register_system(port = "8080"):
                                           os=myDistro, address=myIP, tag="")
 
 
-def get_notify_system(port = "8080"):
+def get_notify_system(port="8080"):
     myHostname = get_hostname()
     myURN = get_urn()
     myDistro = get_distro()

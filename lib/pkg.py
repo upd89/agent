@@ -5,17 +5,21 @@ from classes.package import Package
 from classes.packagelist import Packagelist
 
 
-def addUpdates(sys):
-
-    print("Reading local cache...")
+def updateCache():
     cache = apt.Cache()
-
     if os.geteuid() == 0:
         print("Updating cache...")
         try:
             cache.update()
         except:
             print("had some troubles, but anyway, let's go on...")
+    cache.close()
+
+
+def addUpdates(sys):
+
+    print("Reading local cache...")
+    cache = apt.Cache()
 
     print("Reading Upgradable Packages...")
     for pkg in cache:

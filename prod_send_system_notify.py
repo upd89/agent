@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 
 from lib.configloader import ConfigLoader
-import lib.upstream
-import lib.sysinfo
-import lib.pkg
+import lib.mission
+import lib.log
 
 _config = ConfigLoader("config")
+_logger = lib.log.screenLog()
 
-sys = lib.sysinfo.get_notify_system()
-sys = lib.pkg.addUpdates(sys)
-
-print("Sending to server (notify " + lib.sysinfo.get_hostname() + ")...")
-response = lib.upstream.pushSystemNotify(_config, lib.sysinfo.get_urn(), sys)
-print("Response:\n" + response)
+lib.mission.send_system_notify(_config, _logger)

@@ -1,6 +1,12 @@
 import logging
 
 
+class screenLog:
+
+    def debug(self, msg):
+        print(msg)
+
+
 class Log:
 
     def __init__(self, _config):

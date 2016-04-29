@@ -24,11 +24,11 @@ class ConfigLoader:
     def getPidFile(self):
         return(self.config['daemon']['pidfile'])
 
-    def getUUID(self):
-        return self.__ret_if_exists('general', 'my_uuid')
+    def is_registered(self):
+        return self.__ret_if_exists('server', 'registered') == "true"
 
-    def setUUID(self, uuid):
-        self.__set_config('general', 'my_uuid', uuid)
+    def set_registered(self):
+        self.__set_config('server', 'registered', "true")
 
     def reloadConfig(self):
         self.config.read(self.configname)

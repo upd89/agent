@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
 from lib.configloader import ConfigLoader
-import lib.upstream
-import lib.sysinfo
+import lib.mission
+import lib.log
 
 _config = ConfigLoader("config")
+_logger = lib.log.screenLog()
 
-sys = lib.sysinfo.get_register_system()
-
-print("Sending to server (register " + lib.sysinfo.get_hostname() + ")...")
-response = lib.upstream.pushRegister(_config, sys)
-print("Response:\n" + response)
+lib.mission.send_register(_config, _logger)

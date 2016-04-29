@@ -1,17 +1,10 @@
 #!/usr/bin/env python
 
 from lib.configloader import ConfigLoader
-import lib.upstream
-import lib.sysinfo
-import lib.pkg
+import lib.mission
+import lib.log
 
 _config = ConfigLoader("config")
+_logger = lib.log.screenLog()
 
-packages = lib.pkg.getPackageList()
-
-print("Sending to server (updateInstalled " +
-      lib.sysinfo.get_hostname() + ")...")
-response = lib.upstream.pushSystemUpdateInstalled(_config,
-                                                  lib.sysinfo.get_urn(),
-                                                  packages)
-print("Response:\n" + response)
+lib.mission.send_system_updateinstalled(_config, _logger)

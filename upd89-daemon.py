@@ -5,39 +5,41 @@ from daemonize import Daemonize
 import schedule
 
 from lib.configloader import ConfigLoader
+import lib.mission
 import lib.log
-import lib.upstream
-import lib.sysinfo
-import lib.pkg
 
 _config = ConfigLoader("config")
 log = lib.log.Log(_config)
-logger = log.getLogger()
+_logger = log.getLogger()
 pid = _config.getPidFile()
 
 
-def sendSystemNotify():
-    logger.debug("Job is working")
-    sys = lib.sysinfo.get_notify_system()
-    sys = lib.pkg.addUpdates(sys)
-    logger.debug("Sending to server (notify " +
-                 lib.sysinfo.get_hostname() + ")...")
-    response = lib.upstream.pushSystemNotify(_config,
-                                             lib.sysinfo.get_urn(),
-                                             sys)
-    logger.debug("Response:\n" + response)
+def register():
+    lib.mission.send_register(_config, _logger)
+
+
+def updateinstalled():
+    lib.mission.update_cache()
+    lib.mission.send_system_updateinstalled(_config, _logger)
+
+
+def system_notify():
+    lib.mission.send_system_notify(_config, _logger)
 
 
 def main():
-    schedule.every(5).minutes.do(sendSystemNotify)
+    if not _config.is_registered():
+        register()
+    updateinstalled()
+    system_notify()
+    schedule.every(2).hours.do(updateinstalled)
+    schedule.every(10).minutes.do(system_notify)
 
     while True:
         schedule.run_pending()
         sleep(5)
 
 
-daemon = Daemonize(app="test_app",
-                   pid=pid,
-                   action=main,
-                   keep_fds=log.getKeepfds())
-daemon.start()
+# daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
+# daemon.start()
+main()
