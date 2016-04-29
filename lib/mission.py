@@ -1,3 +1,5 @@
+import json
+import lib.persist
 import lib.upstream
 import lib.sysinfo
 import lib.pkg
@@ -33,3 +35,19 @@ def send_system_notify(_config, _logger):
     response = lib.upstream.pushSystemNotify(
         _config, lib.sysinfo.get_urn(), sys)
     _logger.debug("Response:\n" + response)
+
+
+def do_update(_config, _logger):
+    tasks = lib.persist.Persist("tasks.data")
+    for key in tasks.get_keys():
+        print "key: " + key
+        json_data = tasks.get_key(key)
+        print("json: " + json_data)
+        t = json.loads(json_data)
+        p_list = list()
+        for p in t.get("packages"):
+            pkg_name = p.get("pkg_name")
+            pkg_version = p.get("pdk_version")
+            p_list.append(pkg_name)
+        lib.pkg.do_update(p_list)
+

@@ -68,3 +68,11 @@ def getPackageList():
 
     cache.close()
     return packages
+
+def do_update(p_list):
+    cache = apt.Cache()
+    for p in p_list:
+        cache[p].mark_upgrade()
+    cache.commit()
+    cache.close()
+
