@@ -51,4 +51,3 @@ def do_update(_config, _logger):
         lib.pkg.do_update(p_list)
         tasks.delete_key(key)
 
-
