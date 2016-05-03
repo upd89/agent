@@ -1,13 +1,12 @@
 class Package:
 
-    def __init__(self, name, version, arch, baseversion, section,
-                 homepage, summary, repo, sha256):
+    def __init__(self, name, section, summary, homepage, installed_version,
+                 is_base_version, base_version):
         self.name = name
-        self.version = version
-        self.architecture = arch
-        self.baseversion = baseversion
         self.section = section
-        self.homepage = homepage
         self.summary = summary
-        self.repository = repo
-        self.sha256 = sha256
+        self.homepage = homepage
+        self.installedVersion = installed_version
+        self.isBaseVersion = is_base_version
+        self.baseVersion = base_version
+

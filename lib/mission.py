@@ -49,5 +49,5 @@ def do_update(_config, _logger):
             pkg_version = p.get("pdk_version")
             p_list.append(pkg_name)
         lib.pkg.do_update(p_list)
-        tasks.delete_key(key)
+        #tasks.delete_key(key)
 

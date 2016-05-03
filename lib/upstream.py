@@ -17,7 +17,7 @@ def getSystemNotifyURL(_config, urn):
 
 
 def getSystemUpdateInstalledURL(_config, urn):
-    return __getBaseURL(_config) + "/system/" + urn + "/updateInstalled"
+    return __getBaseURL(_config) + "/system/" + urn + "/refresh-installed"
 
 
 def getTaskNotifyURL(_config, taskid):
@@ -32,6 +32,7 @@ def push(url, data):
 
     try:
         response = urllib2.urlopen(req, json.dumps(data, cls=MyEncoder))
+        print(json.dumps(data, cls=MyEncoder))
         answer = response.read()
     except urllib2.HTTPError, e:
         print('HTTPError = ' + str(e.code))

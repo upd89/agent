@@ -1,12 +1,12 @@
 [server]
-url = http://cc.upd89.org
+url = http://dev.upd89.org
 
 [api]
-version = /v1
+version = /v2
 
 [log]
-file = /tmp/upd89-agent.log
+file = /opt/upd89/agent/upd89-agent.log
 
 [daemon]
-pidfile = /tmp/upd89-agent.pid
+pidfile = /opt/upd89/agent/upd89-agent.pid
 

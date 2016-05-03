@@ -44,7 +44,8 @@ def get_register_system(port="8080"):
     myDistro = get_distro()
     myIP = get_ip() + ":" + port
     return classes.system_register.System(name=myHostname, urn=myURN,
-                                          os=myDistro, address=myIP, tag="")
+                                          os=myDistro, address=myIP, tag="",
+                                          certificate="")
 
 
 def get_notify_system(port="8080"):

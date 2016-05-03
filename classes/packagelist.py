@@ -1,9 +1,9 @@
 class Packagelist:
 
     def __init__(self):
-        self.packages = list()
         self.pkgCount = 0
+        self.packages = list()
 
     def add(self, package):
         self.packages.append(package)
-        self.pkgCount =+ 1
+        self.pkgCount += 1

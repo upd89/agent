@@ -1,9 +1,6 @@
 class Update:
 
-    def __init__(self, name, version, arch, repository, baseversion, sha256):
+    def __init__(self, name, candidate_version, baseversion_hash):
         self.name = name
-        self.version = version
-        self.architecture = arch
-        self.repository = repository
-        self.baseversion = baseversion
-        self.sha256 = sha256
+        self.candidateVersion = candidate_version
+        self.baseVersionHash = baseversion_hash

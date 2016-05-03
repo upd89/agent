@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 
-from lib.configloader import ConfigLoader
-import lib.mission
-import lib.log
-
-import sys, os
+import sys
 import logging
 import logging.handlers
 from io import StringIO
 
-logger = logging.getLogger(u'l')
+logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 mem_log = StringIO()
@@ -19,13 +15,14 @@ logger.addHandler(mem_log_handler)
 stdout_handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(stdout_handler)
 
-_config = ConfigLoader("config")
-_logger = lib.log.screenLog()
+print("test")
 
-logger.debug(u'bla')
-lib.mission.do_update(_config, _logger)
-logger.debug(u'fasel')
-logger.debug(unicode(os.getpid()))
+logger.debug(u'debug1')
+logger.info(u'info2')
+logger.debug(u'debug3')
+logger.info(u'info4')
 
 print("---")
+
 print(mem_log.getvalue())
+
