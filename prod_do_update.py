@@ -22,10 +22,8 @@ logger.addHandler(stdout_handler)
 _config = ConfigLoader("config")
 _logger = lib.log.screenLog()
 
-logger.debug(u'bla')
 lib.mission.do_update(_config, _logger)
-logger.debug(u'fasel')
-logger.debug(unicode(os.getpid()))
+#logger.debug(unicode(os.getpid()))
 
 print("---")
 print(mem_log.getvalue())

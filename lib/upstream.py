@@ -57,3 +57,8 @@ def pushSystemNotify(_config, urn, sys):
 def pushSystemUpdateInstalled(_config, urn, packages):
     url = getSystemUpdateInstalledURL(_config, urn)
     return push(url, packages)
+
+def pushTaskNotify(_config, taskid, tasknotify):
+    url = getTaskNotifyURL(_config, taskid)
+    return push(url, tasknotify)
+

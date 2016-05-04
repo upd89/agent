@@ -7,6 +7,7 @@ from classes.package import Package
 from classes.packagelist import Packagelist
 from classes.repository import Repository
 from classes.package_version import PackageVersion
+from classes.task_notify import TaskNotify
 
 import logging
 
@@ -118,8 +119,6 @@ class PkgManager(apt_pkg.PackageManager):
             else:
                 ver = p.current_ver
             logger = logging.getLogger(u'l')
-            logger.debug(u'hello')
-            logger.debug(unicode(os.getpid()))
             logger.debug(a + u' ' + p.name + u' ' + ver.ver_str + u' ' + ver.arch)
         return True
 
@@ -130,11 +129,15 @@ def do_update(p_list):
     cache = apt.Cache()
     for p in p_list:
         cache[p].mark_upgrade()
-    apt_pkg.config.set("APT::Get::Simulate", "true")
-    apt_pkg.config.set("dir::cache", "/tmp")
-    cache.commit(install_progress=apt.progress.base.InstallProgress())
+    #apt_pkg.config.set("APT::Get::Simulate", "true")
+    #apt_pkg.config.set("dir::cache", "/tmp")
+    result = cache.commit(install_progress=apt.progress.base.InstallProgress())
+    if result:
+        state = "Done"
+    else:
+        state = "Failed"
     cache.close()
     logger = logging.getLogger(u'l')
-    logger.debug(u'world')
-    print("finished.")
-    print(output.getvalue())
+    logger.debug(u"finished.")
+    log = ""
+    return(TaskNotify(state=state, log=log))

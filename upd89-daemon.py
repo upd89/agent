@@ -27,19 +27,24 @@ def system_notify():
     lib.mission.send_system_notify(_config, _logger)
 
 
+def do_update():
+    lib.mission.do_update(_config, _logger)
+
 def main():
     if not _config.is_registered():
         register()
     updateinstalled()
     system_notify()
+    do_update()
     schedule.every(2).hours.do(updateinstalled)
     schedule.every(10).minutes.do(system_notify)
+    schedule.every(10).minutes.do(do_update)
 
     while True:
         schedule.run_pending()
         sleep(5)
 
 
-daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
-daemon.start()
-#main()
+#daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
+#daemon.start()
+main()

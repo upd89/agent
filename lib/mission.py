@@ -41,13 +41,15 @@ def do_update(_config, _logger):
     tasks = lib.persist.Persist("tasks.data")
     for key in tasks.get_keys():
         json_data = tasks.get_key(key)
-        print("key: " + key +" - json: " + json_data)
+        _logger.debug("key: " + key +" - json: " + json_data)
         t = json.loads(json_data)
         p_list = list()
         for p in t.get("packages"):
             pkg_name = p.get("pkg_name")
             pkg_version = p.get("pdk_version")
             p_list.append(pkg_name)
-        lib.pkg.do_update(p_list)
-        #tasks.delete_key(key)
+        tasknotify = lib.pkg.do_update(p_list)
+        response = lib.upstream.pushTaskNotify(_config, key, tasknotify)
+        _logger.debug("Response:\n" + response)
+        tasks.delete_key(key)
 
