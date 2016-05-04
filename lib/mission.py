@@ -38,7 +38,7 @@ def send_system_notify(_config, _logger):
 
 
 def do_update(_config, _logger):
-    tasks = lib.persist.Persist("tasks.data")
+    tasks = lib.persist.Persist("/opt/upd89/agent/tasks.data")
     for key in tasks.get_keys():
         json_data = tasks.get_key(key)
         _logger.debug("key: " + key +" - json: " + json_data)
@@ -52,4 +52,5 @@ def do_update(_config, _logger):
         response = lib.upstream.pushTaskNotify(_config, key, tasknotify)
         _logger.debug("Response:\n" + response)
         tasks.delete_key(key)
+        tasks.close()
 

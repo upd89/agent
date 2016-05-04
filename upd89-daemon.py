@@ -28,6 +28,7 @@ def system_notify():
 
 
 def do_update():
+    _logger.debug("Checking for new Tasks...")
     lib.mission.do_update(_config, _logger)
 
 def main():
@@ -35,10 +36,9 @@ def main():
         register()
     updateinstalled()
     system_notify()
-    do_update()
     schedule.every(2).hours.do(updateinstalled)
     schedule.every(10).minutes.do(system_notify)
-    schedule.every(10).minutes.do(do_update)
+    schedule.every(30).seconds.do(do_update)
 
     while True:
         schedule.run_pending()
