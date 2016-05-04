@@ -28,7 +28,7 @@ def system_notify():
 
 
 def do_update():
-    _logger.debug("Checking for new Tasks...")
+    #_logger.debug("Checking for new Tasks...")
     lib.mission.do_update(_config, _logger)
 
 def main():
