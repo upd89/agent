@@ -45,6 +45,6 @@ def main():
         sleep(5)
 
 
-#daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
-#daemon.start()
-main()
+daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
+daemon.start()
+#main()
