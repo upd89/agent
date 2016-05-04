@@ -52,5 +52,5 @@ def do_update(_config, _logger):
         response = lib.upstream.pushTaskNotify(_config, key, tasknotify)
         _logger.debug("Response:\n" + response)
         tasks.delete_key(key)
-        tasks.close()
+    tasks.close()
 
