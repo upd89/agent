@@ -5,7 +5,7 @@ from classes.encoder import MyEncoder
 
 
 def __getBaseURL(_config):
-    return _config.getServerURL() + _config.getApiVersion()
+    return _config.getServerURL() + "/api" + _config.getApiVersion()
 
 
 def getRegisterURL(_config):
