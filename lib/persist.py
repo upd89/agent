@@ -6,15 +6,15 @@ class Persist:
     def __init__(self, filename):
         self.store = shelve.open(filename)
 
-    def has_key(self, key):
-        return(self.store.has_key(key))
+    def __contains__(self, key):
+        return key in self.store
 
     def delete_key(self, key):
-        if (self.has_key(key)):
+        if (key in self.store):
             del self.store[key]
 
     def get_key(self, key):
-        if (self.has_key(key)):
+        if (key in self.store):
             return(self.store[key])
         else:
             return('')
