@@ -2,63 +2,64 @@ import json
 import urllib2
 
 from classes.encoder import MyEncoder
+from lib.httpsclientauthconnection import HTTPSClientAuthConnection
 
+def __getBasePath(_config):
+    return "/api" + _config.getApiVersion()
 
-def __getBaseURL(_config):
-    return _config.getServerURL() + "/api" + _config.getApiVersion()
+def getRegisterPath(_config):
+    return __getBasePath(_config) + "/register"
 
+def getSystemNotifyPath(_config, urn):
+    return __getBasePath(_config) + "/system/" + urn + "/notify"
 
-def getRegisterURL(_config):
-    return __getBaseURL(_config) + "/register"
+def getSystemUpdateInstalledPath(_config, urn):
+    return __getBasePath(_config) + "/system/" + urn + "/refresh-installed"
 
+def getTaskNotifyPath(_config, taskid):
+    return __getBasePath(_config) + "/task/" + taskid + "/notify"
 
-def getSystemNotifyURL(_config, urn):
-    return __getBaseURL(_config) + "/system/" + urn + "/notify"
-
-
-def getSystemUpdateInstalledURL(_config, urn):
-    return __getBaseURL(_config) + "/system/" + urn + "/refresh-installed"
-
-
-def getTaskNotifyURL(_config, taskid):
-    return __getBaseURL(_config) + "/task/" + taskid + "/notify"
-
-
-def push(url, data):
-    req = urllib2.Request(url)
-    req.add_header('Content-Type', 'application/json')
-
+def push(_config, path, data):
+    host = _config.getServerHost()
+    port = _config.getServerPort()
+    ca = _config.getTlsPath() + '/' + _config.getTlsCa()
+    key = _config.getTlsPath() + '/' + _config.getTlsPrivKey()
+    crt = _config.getTlsPath() + '/' + _config.getTlsPubCert()
+    headers = { "Content-type": "application/json" }
+    jsondata = json.dumps(data, cls=MyEncoder)
     answer = ''
 
+    #print host, port, ca, key, crt, headers
+    #print jsondata
+
     try:
-        response = urllib2.urlopen(req, json.dumps(data, cls=MyEncoder))
-        print(json.dumps(data, cls=MyEncoder))
+        conn = HTTPSClientAuthConnection(host, port, key_file=key, cert_file=crt, ca_file=ca)
+        conn.request('POST', path, jsondata, headers)
+        response = conn.getresponse()
+        print response.status, response.reason
         answer = response.read()
-    except urllib2.HTTPError, e:
-        print('HTTPError = ' + str(e.code))
-    except urllib2.URLError, e:
-        print('URLError = ' + str(e.reason))
-    except Exception:
-        print('generic exception')
+        conn.close()
+    except Exception as e:
+        print('exception!')
+        print(type(e))
+        print(e)
 
     return answer
 
 
 def pushRegister(_config, sys):
-    url = getRegisterURL(_config)
-    return push(url, sys)
-
+    path = getRegisterPath(_config)
+    return push(_config, path, sys)
 
 def pushSystemNotify(_config, urn, sys):
-    url = getSystemNotifyURL(_config, urn)
-    return push(url, sys)
-
+    path = getSystemNotifyPath(_config, urn)
+    return push(_config, path, sys)
 
 def pushSystemUpdateInstalled(_config, urn, packages):
-    url = getSystemUpdateInstalledURL(_config, urn)
-    return push(url, packages)
+    path = getSystemUpdateInstalledPath(_config, urn)
+    return push(_config, path, packages)
 
 def pushTaskNotify(_config, taskid, tasknotify):
-    url = getTaskNotifyURL(_config, taskid)
-    return push(url, tasknotify)
+    path = getTaskNotifyPath(_config, taskid)
+    return push(_config, path, tasknotify)
 

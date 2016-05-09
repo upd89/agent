@@ -15,6 +15,24 @@ class ConfigLoader:
     def getServerURL(self):
         return(self.config['server']['url'])
 
+    def getServerHost(self):
+        return(self.config['server']['host'])
+
+    def getServerPort(self):
+        return(self.config['server']['port'])
+
+    def getTlsPath(self):
+        return(self.config['tls']['path'])
+
+    def getTlsCa(self):
+        return(self.config['tls']['cacert'])
+
+    def getTlsPrivKey(self):
+        return(self.config['tls']['privkey'])
+
+    def getTlsPubCert(self):
+        return(self.config['tls']['pubcert'])
+
     def getApiVersion(self):
         return(self.config['api']['version'])
 

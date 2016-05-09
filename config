@@ -1,5 +1,14 @@
 [server]
 url = http://dev.upd89.org
+host = api.dev.upd89.org
+port = 443
+registered = true
+
+[tls]
+path = /opt/upd89/agent/certs
+cacert = ca.crt
+privkey = priv.key
+pubcert = pub.crt
 
 [api]
 version = /v2
