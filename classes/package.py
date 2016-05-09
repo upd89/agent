@@ -9,4 +9,3 @@ class Package:
         self.installedVersion = installed_version
         self.isBaseVersion = is_base_version
         self.baseVersion = base_version
-

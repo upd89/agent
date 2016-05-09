@@ -4,7 +4,8 @@ from lib.configloader import ConfigLoader
 import lib.mission
 import lib.log
 
-import sys, os
+import sys
+import os
 import logging
 import logging.handlers
 from io import StringIO
@@ -23,7 +24,7 @@ _config = ConfigLoader("config")
 _logger = lib.log.screenLog()
 
 lib.mission.do_update(_config, _logger)
-#logger.debug(unicode(os.getpid()))
+# logger.debug(unicode(os.getpid()))
 
 print("---")
 print(mem_log.getvalue())

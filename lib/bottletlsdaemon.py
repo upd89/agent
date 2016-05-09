@@ -9,20 +9,26 @@ from contextlib import contextmanager
 # https://raw.githubusercontent.com/jonathanhood/bottledaemon/master/bottledaemon/bottledaemon.py
 # http://www.socouldanyone.com/2014/01/bottle-with-ssl.html
 
+
 class SSLWSGIRefServer(bottle.ServerAdapter):
+
     def run(self, handler):
         from wsgiref.simple_server import make_server, WSGIRequestHandler
         import ssl
         if self.quiet:
             class QuietHandler(WSGIRequestHandler):
-                def log_request(*args, **kw): pass
+
+                def log_request(*args, **kw):
+                    pass
             self.options['handler_class'] = QuietHandler
         srv = make_server(self.host, self.port, handler, **self.options)
-        srv.socket = ssl.wrap_socket (
-         srv.socket,
-         certfile='/opt/upd89/agent/certs/server.pem',  # path to certificate
-         server_side=True)
+        srv.socket = ssl.wrap_socket(
+            srv.socket,
+            certfile='/opt/upd89/agent/certs/server.pem',
+            # path to certificate
+            server_side=True)
         srv.serve_forever()
+
 
 @contextmanager
 def __locked_pidfile(filename):
@@ -72,7 +78,7 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None):
         )
 
     if args.action == "start":
-        log = open(logfile,"w+")
+        log = open(logfile, "w+")
         context = daemon.DaemonContext(
             pidfile=__locked_pidfile(pidfile),
             stdout=log,
@@ -80,11 +86,10 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None):
         )
 
         with context:
-            #bottle.run(host=host, port=port)
+            # bottle.run(host=host, port=port)
             srv = SSLWSGIRefServer(host=host, port=port)
             bottle.run(server=srv)
     else:
-        with open(pidfile,"r") as p:
+        with open(pidfile, "r") as p:
             pid = int(p.read())
             os.kill(pid, signal.SIGTERM)
-

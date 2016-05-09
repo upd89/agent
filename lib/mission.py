@@ -41,7 +41,7 @@ def do_update(_config, _logger):
     tasks = lib.persist.Persist("/opt/upd89/agent/tasks.data")
     for key in tasks.get_keys():
         json_data = tasks.get_key(key)
-        _logger.debug("key: " + key +" - json: " + json_data)
+        _logger.debug("key: " + key + " - json: " + json_data)
         t = json.loads(json_data)
         p_list = list()
         for p in t.get("packages"):
@@ -53,4 +53,3 @@ def do_update(_config, _logger):
         _logger.debug("Response:\n" + response)
         tasks.delete_key(key)
     tasks.close()
-

@@ -6,4 +6,4 @@ class System:
         self.os = os
         self.address = address
         self.tag = tag
-        self.certificate = certificate # TODO: Remove
+        self.certificate = certificate  # TODO: Remove

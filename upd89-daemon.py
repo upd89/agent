@@ -31,6 +31,7 @@ def do_update():
     #_logger.debug("Checking for new Tasks...")
     lib.mission.do_update(_config, _logger)
 
+
 def main():
     if not _config.is_registered():
         register()
@@ -45,6 +46,7 @@ def main():
         sleep(5)
 
 
-daemon = Daemonize(app="test_app", pid=pid, action=main, keep_fds=log.getKeepfds())
+daemon = Daemonize(app="test_app", pid=pid,
+                   action=main, keep_fds=log.getKeepfds())
 daemon.start()
-#main()
+# main()

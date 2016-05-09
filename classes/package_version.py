@@ -5,4 +5,3 @@ class PackageVersion:
         self.sha256 = sha256
         self.architecture = arch
         self.repository = repository
-

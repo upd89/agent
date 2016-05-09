@@ -25,4 +25,3 @@ logger.info(u'info4')
 print("---")
 
 print(mem_log.getvalue())
-

@@ -4,11 +4,14 @@ import httplib
 
 # http://code.activestate.com/recipes/577548-https-httplib-client-connection-with-certificate-v/
 
+
 class HTTPSClientAuthConnection(httplib.HTTPSConnection):
+
     """ Class to make a HTTPS connection, with support for full client-based SSL Authentication"""
 
     def __init__(self, host, port, key_file, cert_file, ca_file, timeout=None):
-        httplib.HTTPSConnection.__init__(self, host, key_file=key_file, cert_file=cert_file)
+        httplib.HTTPSConnection.__init__(
+            self, host, key_file=key_file, cert_file=cert_file)
         self.key_file = key_file
         self.cert_file = cert_file
         self.ca_file = ca_file
@@ -27,5 +30,5 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
             self.sock = sock
             self._tunnel()
         # force Server Certificate Check
-        self.sock = ssl.wrap_socket(sock, self.key_file, self.cert_file, ca_certs=self.ca_file, cert_reqs=ssl.CERT_REQUIRED)
-
+        self.sock = ssl.wrap_socket(
+            sock, self.key_file, self.cert_file, ca_certs=self.ca_file, cert_reqs=ssl.CERT_REQUIRED)

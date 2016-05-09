@@ -11,6 +11,7 @@ from classes.task_notify import TaskNotify
 
 import logging
 
+
 def updateCache():
     cache = apt.Cache()
     if os.geteuid() == 0:
@@ -32,13 +33,13 @@ def addUpdates(sys):
             pkg_origin = pkg.versions[0].origins[0]
 
             candidate_repo = Repository(archive=pkg_origin.archive,
-                              origin=pkg_origin.origin,
-                              component=pkg_origin.component)
+                                        origin=pkg_origin.origin,
+                                        component=pkg_origin.component)
 
             candidate_version = PackageVersion(version=pkg.candidate.version,
                                                sha256=pkg.candidate.sha256,
                                                arch=pkg.architecture(),
-                                              repository=candidate_repo)
+                                               repository=candidate_repo)
 
             update = Update(name=pkg.name,
                             candidate_version=candidate_version,
@@ -59,8 +60,8 @@ def getPackageList():
             pkg_base_origin = pkg_base.origins[0]
 
             installed_repo = Repository(archive=pkg_origin.archive,
-                              origin=pkg_origin.origin,
-                              component=pkg_origin.component)
+                                        origin=pkg_origin.origin,
+                                        component=pkg_origin.component)
 
             installed_version = PackageVersion(version=pkg.installed.version,
                                                sha256=pkg.installed.sha256,
@@ -119,7 +120,8 @@ class PkgManager(apt_pkg.PackageManager):
             else:
                 ver = p.current_ver
             logger = logging.getLogger(u'l')
-            logger.debug(a + u' ' + p.name + u' ' + ver.ver_str + u' ' + ver.arch)
+            logger.debug(
+                a + u' ' + p.name + u' ' + ver.ver_str + u' ' + ver.arch)
         return True
 
 
@@ -129,8 +131,8 @@ def do_update(p_list):
     cache = apt.Cache()
     for p in p_list:
         cache[p].mark_upgrade()
-    #apt_pkg.config.set("APT::Get::Simulate", "true")
-    #apt_pkg.config.set("dir::cache", "/tmp")
+    # apt_pkg.config.set("APT::Get::Simulate", "true")
+    # apt_pkg.config.set("dir::cache", "/tmp")
     result = cache.commit(install_progress=apt.progress.base.InstallProgress())
     if result:
         state = "Done"
