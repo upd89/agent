@@ -10,6 +10,10 @@ def get_hostname():
     return socket.gethostname()
 
 
+def get_fqdn():
+    return socket.getfqdn()
+
+
 def get_urn():
     return 'demo-' + get_hostname() + '-demo'
 
@@ -42,9 +46,10 @@ def get_register_system(port="8080"):
     myHostname = get_hostname()
     myURN = get_urn()
     myDistro = get_distro()
-    myIP = get_ip() + ":" + port
+    myIP = get_ip()
+    myAddress = get_fqdn() + ":" + port
     return classes.system_register.System(name=myHostname, urn=myURN,
-                                          os=myDistro, address=myIP, tag="",
+                                          os=myDistro, address=myAddress, tag="",
                                           certificate="")
 
 
@@ -52,8 +57,9 @@ def get_notify_system(port="8080"):
     myHostname = get_hostname()
     myURN = get_urn()
     myDistro = get_distro()
-    myIP = get_ip() + ":" + port
+    myIP = get_ip()
+    myAddress = get_fqdn() + ":" + port
     needReboot = get_reboot_required()
     return classes.system_notify.System(name=myHostname, urn=myURN,
-                                        os=myDistro, address=myIP,
+                                        os=myDistro, address=myAddress,
                                         reboot_required=needReboot)
