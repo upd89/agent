@@ -5,10 +5,15 @@ from bottle import get, post, request, run, abort, redirect
 import json
 import lib.persist
 import lib.sysinfo
+from lib.configloader import ConfigLoader
+
+_config = ConfigLoader("websrv.ini")
+port = _config.getWebserverPort()
+logfile = _config.getWebserverLogfile()
+pidfile = _config.getWebserverPidfile()
 
 import os
 cwd = os.getcwd()
-
 
 @get('/')
 def index():
@@ -27,5 +32,4 @@ def new_task():
 
 if __name__ == "__main__":
     my_ip = lib.sysinfo.get_ip()
-    daemon_run(host=my_ip, port=8080, pidfile=cwd + "/websrv.pid",
-               logfile=cwd + "/websrv.log")
+    daemon_run(host=my_ip, port=port, pidfile=pidfile, logfile=logfile)

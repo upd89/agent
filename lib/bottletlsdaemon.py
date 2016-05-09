@@ -1,4 +1,5 @@
 import os
+import ssl
 import argparse
 import signal
 import daemon
@@ -25,7 +26,8 @@ class SSLWSGIRefServer(bottle.ServerAdapter):
         srv.socket = ssl.wrap_socket(
             srv.socket,
             certfile='/opt/upd89/agent/certs/server.pem',
-            # path to certificate
+            ca_certs='/opt/upd89/agent/certs/ca.crt',
+            cert_reqs=ssl.CERT_REQUIRED,
             server_side=True)
         srv.serve_forever()
 

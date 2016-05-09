@@ -12,6 +12,15 @@ class ConfigLoader:
     def __str__(self):
         return repr(self)
 
+    def getWebserverPort(self):
+        return(self.config['webserver']['port'])
+
+    def getWebserverLogfile(self):
+        return(self.config['webserver']['logfile'])
+
+    def getWebserverPidfile(self):
+        return(self.config['webserver']['pidfile'])
+
     def getServerURL(self):
         return(self.config['server']['url'])
 
@@ -32,6 +41,9 @@ class ConfigLoader:
 
     def getTlsPubCert(self):
         return(self.config['tls']['pubcert'])
+
+    def getTlsWebserverPem(self):
+        return(self.config['tls']['webserverpem'])
 
     def getApiVersion(self):
         return(self.config['api']['version'])
