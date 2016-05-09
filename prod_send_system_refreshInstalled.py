@@ -7,4 +7,4 @@ import lib.log
 _config = ConfigLoader("config")
 _logger = lib.log.screenLog()
 
-lib.mission.send_system_updateinstalled(_config, _logger)
+lib.mission.send_system_refreshinstalled(_config, _logger)

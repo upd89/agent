@@ -17,7 +17,7 @@ def getSystemNotifyPath(_config, urn):
     return __getBasePath(_config) + "/system/" + urn + "/notify"
 
 
-def getSystemUpdateInstalledPath(_config, urn):
+def getSystemRefreshInstalledPath(_config, urn):
     return __getBasePath(_config) + "/system/" + urn + "/refresh-installed"
 
 
@@ -64,8 +64,8 @@ def pushSystemNotify(_config, urn, sys):
     return push(_config, path, sys)
 
 
-def pushSystemUpdateInstalled(_config, urn, packages):
-    path = getSystemUpdateInstalledPath(_config, urn)
+def pushSystemRefreshInstalled(_config, urn, packages):
+    path = getSystemRefreshInstalledPath(_config, urn)
     return push(_config, path, packages)
 
 

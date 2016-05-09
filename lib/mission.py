@@ -18,11 +18,11 @@ def send_register(_config, _logger):
     _config.set_registered()
 
 
-def send_system_updateinstalled(_config, _logger):
+def send_system_refreshinstalled(_config, _logger):
     packages = lib.pkg.getPackageList()
     _logger.debug(
-        "Sending to server (updateInstalled " + lib.sysinfo.get_hostname() + ")...")
-    response = lib.upstream.pushSystemUpdateInstalled(
+        "Sending to server (refreshInstalled " + lib.sysinfo.get_hostname() + ")...")
+    response = lib.upstream.pushSystemRefreshInstalled(
         _config, lib.sysinfo.get_urn(), packages)
     _logger.debug("Response:\n" + response)
 

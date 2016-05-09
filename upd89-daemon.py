@@ -18,9 +18,9 @@ def register():
     lib.mission.send_register(_config, _logger)
 
 
-def updateinstalled():
+def refreshinstalled():
     lib.mission.update_cache()
-    lib.mission.send_system_updateinstalled(_config, _logger)
+    lib.mission.send_system_refreshinstalled(_config, _logger)
 
 
 def system_notify():
@@ -35,9 +35,9 @@ def do_update():
 def main():
     if not _config.is_registered():
         register()
-    updateinstalled()
+    refreshinstalled()
     system_notify()
-    schedule.every(2).hours.do(updateinstalled)
+    schedule.every(2).hours.do(refreshinstalled)
     schedule.every(10).minutes.do(system_notify)
     schedule.every(30).seconds.do(do_update)
 
