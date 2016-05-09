@@ -20,7 +20,7 @@ class SSLWSGIRefServer(bottle.ServerAdapter):
         srv = make_server(self.host, self.port, handler, **self.options)
         srv.socket = ssl.wrap_socket (
          srv.socket,
-         certfile='/opt/upd89/agent/server.pem',  # path to certificate
+         certfile='/opt/upd89/agent/certs/server.pem',  # path to certificate
          server_side=True)
         srv.serve_forever()
 
