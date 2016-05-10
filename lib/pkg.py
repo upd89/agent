@@ -127,10 +127,15 @@ class PkgManager(apt_pkg.PackageManager):
 
 def do_update(p_list):
     apt_pkg.PackageManager = PkgManager
+    logger = logging.getLogger(u'l')
     output = StringIO.StringIO()
     cache = apt.Cache()
     for p in p_list:
-        cache[p].mark_upgrade()
+        if p in cache:
+            cache[p].mark_upgrade()
+        else:
+            logger.debug("package not found: " + p )
+
     # apt_pkg.config.set("APT::Get::Simulate", "true")
     # apt_pkg.config.set("dir::cache", "/tmp")
     result = cache.commit(install_progress=apt.progress.base.InstallProgress())
@@ -139,7 +144,6 @@ def do_update(p_list):
     else:
         state = "Failed"
     cache.close()
-    logger = logging.getLogger(u'l')
     logger.debug(u"finished.")
     log = ""
     return(TaskNotify(state=state, log=log))
