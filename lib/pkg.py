@@ -1,7 +1,7 @@
 import os
+import sys
 import apt
 import apt_pkg
-import StringIO
 from classes.update import Update
 from classes.package import Package
 from classes.packagelist import Packagelist
@@ -9,11 +9,13 @@ from classes.repository import Repository
 from classes.package_version import PackageVersion
 from classes.task_notify import TaskNotify
 
-import logging
+
+def _getCache():
+    return apt.Cache(apt.progress.text.OpProgress())
 
 
 def updateCache():
-    cache = apt.Cache()
+    cache = _getCache()
     if os.geteuid() == 0:
         print("Updating cache...")
         try:
@@ -25,7 +27,7 @@ def updateCache():
 
 def addUpdates(sys):
     print("Reading local cache...")
-    cache = apt.Cache()
+    cache = _getCache()
     print("Reading Upgradable Packages...")
     for pkg in cache:
         if (pkg.is_upgradable):
@@ -51,7 +53,7 @@ def addUpdates(sys):
 
 
 def getPackageList():
-    cache = apt.Cache()
+    cache = _getCache()
     packages = Packagelist()
     for pkg in cache:
         if (pkg.is_installed):
@@ -93,57 +95,42 @@ def getPackageList():
     return packages
 
 
-class PkgManager(apt_pkg.PackageManager):
-    parent = apt_pkg.PackageManager
-    depcache = apt_pkg.DepCache(apt_pkg.Cache())
-    installation_plan = []
-
-    def install(self, pkg, file):
-        # print "Installing", pkg.get_fullname(True)
-        self.installation_plan.append((pkg, u'Inst'))
-        return True
-
-    def configure(self, pkg):
-        # print "Configuring", pkg.get_fullname(True)
-        self.installation_plan.append((pkg, u'Conf'))
-        return True
-
-    def remove(self, pkg, purge):
-        # print "Removing", pkg.get_fullname(True)
-        self.installation_plan.append((pkg, u'Rem'))
-        return True
-
-    def go(self, fd):
-        for (p, a) in self.installation_plan:
-            if a == u'Inst' or a == u'Conf':
-                ver = self.depcache.get_candidate_ver(p)
-            else:
-                ver = p.current_ver
-            logger = logging.getLogger(u'l')
-            logger.debug(
-                a + u' ' + p.name + u' ' + ver.ver_str + u' ' + ver.arch)
-        return True
-
-
 def do_update(p_list):
-    apt_pkg.PackageManager = PkgManager
-    logger = logging.getLogger(u'l')
-    output = StringIO.StringIO()
-    cache = apt.Cache()
+
+    class TextInstallProgress(apt.progress.base.InstallProgress):
+
+        def __init__(self, progress_log):
+            self.progress_log = progress_log
+            super(TextInstallProgress, self).__init__()
+
+        def fork(self):
+            pid = os.fork()
+            if pid == 0:
+                os.dup2(self.progress_log, 1)
+                os.dup2(self.progress_log, 2)
+            return pid
+
+    apt_pkg.config.set("APT::Get::Simulate", "true")
+    apt_pkg.config.set("dir::cache", "/tmp")
+    cache = _getCache()
+    state = "Failed"
+    progress_output, progress_input = os.pipe()
+
     for p in p_list:
         if p in cache:
             cache[p].mark_upgrade()
         else:
-            logger.debug("package not found: " + p )
+            print("package not found: '%s'" % p)
 
-    # apt_pkg.config.set("APT::Get::Simulate", "true")
-    # apt_pkg.config.set("dir::cache", "/tmp")
-    result = cache.commit(install_progress=apt.progress.base.InstallProgress())
-    if result:
-        state = "Done"
-    else:
-        state = "Failed"
+    try:
+        result = cache.commit(apt.progress.text.AcquireProgress(),
+                              TextInstallProgress(progress_input))
+        if result:
+            state = "Done"
+    except SystemError as e:
+        print("Error while updating: '%s'" % e)
     cache.close()
-    logger.debug(u"finished.")
-    log = ""
+    os.close(progress_input)
+    log = os.fdopen(progress_output).read()
+    print("---\n" + log + "\n---")
     return(TaskNotify(state=state, log=log))

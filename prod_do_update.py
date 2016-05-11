@@ -1,30 +1,42 @@
 #!/usr/bin/env python
 
 from lib.configloader import ConfigLoader
-import lib.mission
 import lib.log
 
 import sys
 import os
 import logging
 import logging.handlers
-from io import StringIO
+from StringIO import StringIO
 
-logger = logging.getLogger(u'l')
-logger.setLevel(logging.DEBUG)
 
-mem_log = StringIO()
-mem_log_handler = logging.StreamHandler(mem_log)
-logger.addHandler(mem_log_handler)
+class RedirectStdStreams(object):
 
-stdout_handler = logging.StreamHandler(sys.stdout)
-logger.addHandler(stdout_handler)
+    def __init__(self, stdout=None, stderr=None):
+        self._stdout = stdout or sys.stdout
+        self._stderr = stderr or sys.stderr
+
+    def __enter__(self):
+        self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
+        self.old_stdout.flush()
+        self.old_stderr.flush()
+        sys.stdout, sys.stderr = self._stdout, self._stderr
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._stdout.flush()
+        self._stderr.flush()
+        sys.stdout = self.old_stdout
+        sys.stderr = self.old_stderr
 
 _config = ConfigLoader("config")
 _logger = lib.log.screenLog()
 
-lib.mission.do_update(_config, _logger)
-# logger.debug(unicode(os.getpid()))
+mem_log = StringIO()
 
-print("---")
+with RedirectStdStreams(stdout=mem_log, stderr=mem_log):
+    print("RedirectStdStream...")
+    import lib.mission
+    lib.mission.do_update(_config, _logger)
+
+print("--")
 print(mem_log.getvalue())
