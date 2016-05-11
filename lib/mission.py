@@ -14,7 +14,7 @@ def send_register(_config, _logger):
     _logger.debug(
         "Sending to server (register " + lib.sysinfo.get_hostname() + ")...")
     response = lib.upstream.pushRegister(_config, sys)
-    _logger.debug("Response:\n" + response)
+    _logger.debug("Response: " + response)
     _config.set_registered()
 
 
@@ -24,7 +24,7 @@ def send_system_refreshinstalled(_config, _logger):
         "Sending to server (refreshInstalled " + lib.sysinfo.get_hostname() + ")...")
     response = lib.upstream.pushSystemRefreshInstalled(
         _config, lib.sysinfo.get_urn(), packages)
-    _logger.debug("Response:\n" + response)
+    _logger.debug("Response: " + response)
 
 
 def send_system_notify(_config, _logger):
@@ -34,14 +34,14 @@ def send_system_notify(_config, _logger):
         "Sending to server (notify " + lib.sysinfo.get_hostname() + ")...")
     response = lib.upstream.pushSystemNotify(
         _config, lib.sysinfo.get_urn(), sys)
-    _logger.debug("Response:\n" + response)
+    _logger.debug("Response: " + response)
 
 
 def do_update(_config, _logger):
     tasks = lib.persist.Persist("/opt/upd89/agent/tasks.data")
     for key in tasks.get_keys():
         json_data = tasks.get_key(key)
-        _logger.debug("key: " + key + " - json: " + json_data)
+        _logger.debug(u"key: %s - json: %s" % (key, json_data))
         t = json.loads(json_data)
         p_list = list()
         for p in t.get("packages"):
@@ -50,6 +50,6 @@ def do_update(_config, _logger):
             p_list.append(pkg_name)
         tasknotify = lib.pkg.do_update(p_list)
         response = lib.upstream.pushTaskNotify(_config, key, tasknotify)
-        _logger.debug("Response:\n" + response)
+        _logger.debug("Response: " + response)
         tasks.delete_key(key)
     tasks.close()
