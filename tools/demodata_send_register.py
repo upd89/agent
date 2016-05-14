@@ -2,13 +2,13 @@
 
 import sys
 
-# import syspath
+import syspath
 from random import randint
 from lib.configloader import ConfigLoader
 import demodata
 import lib.upstream
 
-_config = ConfigLoader("config")
+_config = ConfigLoader("../config")
 
 if '-h' in sys.argv:
     print("\n '--random' generates random hostname\n")

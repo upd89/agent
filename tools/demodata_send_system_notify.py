@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-# import syspath
+import syspath
 from lib.configloader import ConfigLoader
 import demodata
 import lib.upstream
 
-_config = ConfigLoader("config")
+_config = ConfigLoader("../config")
 
 # Demodata
 notify_sys = demodata.notify_sys
