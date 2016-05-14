@@ -33,6 +33,8 @@ def addUpdateHashes(sys, knownHashes):
         if (pkg.is_upgradable):
             if not pkg.candidate.sha256 in knownHashes:
                 sys.addUpdate(pkg.candidate.sha256)
+            else:
+                sys.increment()
     cache.close()
     return sys
 
@@ -71,6 +73,8 @@ def getPackageHashList(knownHashes):
         if (pkg.is_installed):
             if not pkg.installed.sha256 in knownHashes:
                 packages.add(pkg.installed.sha256)
+            else:
+                packages.increment()
     cache.close()
     return packages
 

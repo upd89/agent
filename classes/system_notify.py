@@ -9,6 +9,11 @@ class System:
         self.updCount = 0
         self.packageUpdates = list()
 
+
+    def increment(self):
+        self.updCount += 1
+
+
     def addUpdate(self, update):
         self.packageUpdates.append(update)
-        self.updCount += 1
+        increment()
