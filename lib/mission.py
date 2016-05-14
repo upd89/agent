@@ -3,6 +3,7 @@ import lib.persist
 import lib.upstream
 import lib.sysinfo
 import lib.pkg
+import datetime
 
 
 def update_cache():
@@ -19,7 +20,8 @@ def send_register(_config, _logger):
 
 
 def send_system_refreshinstalled_hash(_config, _logger):
-    packages = lib.pkg.getPackageHashList()
+    known_packages = lib.persist.Persist("/opt/upd89/agent/known_packages.data")
+    packages = lib.pkg.getPackageHashList(known_packages.get_keys())
     _logger.debug(
         "Sending to server (refreshInstalledHash " + lib.sysinfo.get_hostname() + ")...")
     response = lib.upstream.pushSystemRefreshInstalledHash(
@@ -29,7 +31,8 @@ def send_system_refreshinstalled_hash(_config, _logger):
     j = json.loads(response)
     print j.get("status")
     for h in j.get("knownPackages"):
-        print h
+        now = datetime.datetime.now().strftime("%d.%m.%y %H:%M")
+        known_packages.set_key(h.encode('ascii','ignore'), now)
 
 
 def send_system_refreshinstalled(_config, _logger):
@@ -42,8 +45,9 @@ def send_system_refreshinstalled(_config, _logger):
 
 
 def send_system_notify_hash(_config, _logger):
+    known_updates = lib.persist.Persist("/opt/upd89/agent/known_updates.data")
     sys = lib.sysinfo.get_notify_system()
-    sys = lib.pkg.addUpdateHashes(sys)
+    sys = lib.pkg.addUpdateHashes(sys, known_updates.get_keys())
     _logger.debug(
         "Sending to server (notifyHash " + lib.sysinfo.get_hostname() + ")...")
     response = lib.upstream.pushSystemNotifyHash(
@@ -53,7 +57,8 @@ def send_system_notify_hash(_config, _logger):
     j = json.loads(response)
     print j.get("status")
     for h in j.get("knownPackages"):
-        print h
+        now = datetime.datetime.now().strftime("%d.%m.%y %H:%M")
+        known_updates.set_key(h.encode('ascii','ignore'), now)
 
 
 def send_system_notify(_config, _logger):
