@@ -44,7 +44,7 @@ def push(_config, path, data):
     answer = ''
 
     # print host, port, ca, key, crt, headers
-    print jsondata
+    # print jsondata
 
     try:
         conn = HTTPSClientAuthConnection(
