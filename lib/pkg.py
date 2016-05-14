@@ -14,6 +14,59 @@ def _getCache():
     return apt.Cache(apt.progress.text.OpProgress())
 
 
+def _buildPackage(pkg):
+    pkg_origin = pkg.installed.origins[0]
+    pkg_base = pkg.versions[-1]
+    pkg_base_origin = pkg_base.origins[0]
+
+    installed_repo = Repository(archive=pkg_origin.archive,
+                                origin=pkg_origin.origin,
+                                component=pkg_origin.component)
+
+    installed_version = PackageVersion(version=pkg.installed.version,
+                                       sha256=pkg.installed.sha256,
+                                       arch=pkg.architecture(),
+                                       repository=installed_repo)
+
+    if (pkg.installed.sha256 == pkg_base.sha256):
+        is_base_version = True
+        base_version = False
+    else:
+        is_base_version = False
+        base_repo = Repository(archive=pkg_base_origin.archive,
+                               origin=pkg_base_origin.origin,
+                               component=pkg_base_origin.component)
+        base_version = PackageVersion(version=pkg_base.version,
+                                      sha256=pkg_base.sha256,
+                                      arch=pkg.architecture(),
+                                      repository=base_repo)
+
+    package = Package(name=pkg.name, section=pkg.section,
+                      summary=pkg.installed.summary,
+                      homepage=pkg.installed.homepage,
+                      installed_version=installed_version,
+                      is_base_version=is_base_version,
+                      base_version=base_version)
+
+    return package
+
+
+def _buildUpdate(pkg):
+    pkg_base = pkg.versions[-1]
+    pkg_origin = pkg.versions[0].origins[0]
+    candidate_repo = Repository(archive=pkg_origin.archive,
+                                origin=pkg_origin.origin,
+                                component=pkg_origin.component)
+    candidate_version = PackageVersion(version=pkg.candidate.version,
+                                       sha256=pkg.candidate.sha256,
+                                       arch=pkg.architecture(),
+                                       repository=candidate_repo)
+    update = Update(name=pkg.name,
+                    candidate_version=candidate_version,
+                    baseversion_hash=pkg_base.sha256)
+    return update
+
+
 def updateCache():
     cache = _getCache()
     if os.geteuid() == 0:
@@ -45,23 +98,7 @@ def addUpdates(sys):
     print("Reading Upgradable Packages...")
     for pkg in cache:
         if (pkg.is_upgradable):
-            pkg_base = pkg.versions[-1]
-            pkg_origin = pkg.versions[0].origins[0]
-
-            candidate_repo = Repository(archive=pkg_origin.archive,
-                                        origin=pkg_origin.origin,
-                                        component=pkg_origin.component)
-
-            candidate_version = PackageVersion(version=pkg.candidate.version,
-                                               sha256=pkg.candidate.sha256,
-                                               arch=pkg.architecture(),
-                                               repository=candidate_repo)
-
-            update = Update(name=pkg.name,
-                            candidate_version=candidate_version,
-                            baseversion_hash=pkg_base.sha256)
-
-            sys.addUpdate(update)
+            sys.addUpdate(_buildUpdate(pkg))
     cache.close()
     return sys
 
@@ -84,40 +121,7 @@ def getPackageList():
     packages = Packagelist()
     for pkg in cache:
         if (pkg.is_installed):
-            pkg_origin = pkg.installed.origins[0]
-            pkg_base = pkg.versions[-1]
-            pkg_base_origin = pkg_base.origins[0]
-
-            installed_repo = Repository(archive=pkg_origin.archive,
-                                        origin=pkg_origin.origin,
-                                        component=pkg_origin.component)
-
-            installed_version = PackageVersion(version=pkg.installed.version,
-                                               sha256=pkg.installed.sha256,
-                                               arch=pkg.architecture(),
-                                               repository=installed_repo)
-
-            if (pkg.installed.sha256 == pkg_base.sha256):
-                is_base_version = True
-                base_version = False
-            else:
-                is_base_version = False
-                base_repo = Repository(archive=pkg_base_origin.archive,
-                                       origin=pkg_base_origin.origin,
-                                       component=pkg_base_origin.component)
-                base_version = PackageVersion(version=pkg_base.version,
-                                              sha256=pkg_base.sha256,
-                                              arch=pkg.architecture(),
-                                              repository=base_repo)
-
-            package = Package(name=pkg.name, section=pkg.section,
-                              summary=pkg.installed.summary,
-                              homepage=pkg.installed.homepage,
-                              installed_version=installed_version,
-                              is_base_version=is_base_version,
-                              base_version=base_version)
-
-            packages.add(package)
+            packages.add(_buildPackage(pkg))
     cache.close()
     return packages
 
