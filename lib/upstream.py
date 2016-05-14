@@ -17,8 +17,16 @@ def getSystemNotifyPath(_config, urn):
     return __getBasePath(_config) + "/system/" + urn + "/notify"
 
 
+def getSystemNotifyHashPath(_config, urn):
+    return __getBasePath(_config) + "/system/" + urn + "/notify-hash"
+
+
 def getSystemRefreshInstalledPath(_config, urn):
     return __getBasePath(_config) + "/system/" + urn + "/refresh-installed"
+
+
+def getSystemRefreshInstalledHashPath(_config, urn):
+    return __getBasePath(_config) + "/system/" + urn + "/refresh-installed-hash"
 
 
 def getTaskNotifyPath(_config, taskid):
@@ -59,9 +67,19 @@ def pushRegister(_config, sys):
     return push(_config, path, sys)
 
 
+def pushSystemNotifyHash(_config, urn, sys):
+    path = getSystemNotifyHashPath(_config, urn)
+    return push(_config, path, sys)
+
+
 def pushSystemNotify(_config, urn, sys):
     path = getSystemNotifyPath(_config, urn)
     return push(_config, path, sys)
+
+
+def pushSystemRefreshInstalledHash(_config, urn, packages):
+    path = getSystemRefreshInstalledHashPath(_config, urn)
+    return push(_config, path, packages)
 
 
 def pushSystemRefreshInstalled(_config, urn, packages):

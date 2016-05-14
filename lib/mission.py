@@ -18,6 +18,20 @@ def send_register(_config, _logger):
     _config.set_registered()
 
 
+def send_system_refreshinstalled_hash(_config, _logger):
+    packages = lib.pkg.getPackageHashList()
+    _logger.debug(
+        "Sending to server (refreshInstalledHash " + lib.sysinfo.get_hostname() + ")...")
+    response = lib.upstream.pushSystemRefreshInstalledHash(
+        _config, lib.sysinfo.get_urn(), packages)
+    _logger.debug("Response: " + response)
+
+    j = json.loads(response)
+    print j.get("status")
+    for h in j.get("knownPackages"):
+        print h
+
+
 def send_system_refreshinstalled(_config, _logger):
     packages = lib.pkg.getPackageList()
     _logger.debug(
@@ -25,6 +39,21 @@ def send_system_refreshinstalled(_config, _logger):
     response = lib.upstream.pushSystemRefreshInstalled(
         _config, lib.sysinfo.get_urn(), packages)
     _logger.debug("Response: " + response)
+
+
+def send_system_notify_hash(_config, _logger):
+    sys = lib.sysinfo.get_notify_system()
+    sys = lib.pkg.addUpdateHashes(sys)
+    _logger.debug(
+        "Sending to server (notifyHash " + lib.sysinfo.get_hostname() + ")...")
+    response = lib.upstream.pushSystemNotifyHash(
+        _config, lib.sysinfo.get_urn(), sys)
+    _logger.debug("Response: " + response)
+
+    j = json.loads(response)
+    print j.get("status")
+    for h in j.get("knownPackages"):
+        print h
 
 
 def send_system_notify(_config, _logger):

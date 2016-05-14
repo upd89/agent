@@ -25,6 +25,17 @@ def updateCache():
     cache.close()
 
 
+def addUpdateHashes(sys):
+    print("Reading local cache...")
+    cache = _getCache()
+    print("Reading Upgradable Packages...")
+    for pkg in cache:
+        if (pkg.is_upgradable):
+            sys.addUpdate(pkg.candidate.sha256)
+    cache.close()
+    return sys
+
+
 def addUpdates(sys):
     print("Reading local cache...")
     cache = _getCache()
@@ -50,6 +61,16 @@ def addUpdates(sys):
             sys.addUpdate(update)
     cache.close()
     return sys
+
+
+def getPackageHashList():
+    cache = _getCache()
+    packages = Packagelist()
+    for pkg in cache:
+        if (pkg.is_installed):
+            packages.add(pkg.installed.sha256)
+    cache.close()
+    return packages
 
 
 def getPackageList():
