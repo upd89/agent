@@ -16,4 +16,4 @@ class System:
 
     def addUpdate(self, update):
         self.packageUpdates.append(update)
-        increment()
+        self.increment()

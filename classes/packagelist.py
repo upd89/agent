@@ -11,4 +11,4 @@ class Packagelist:
 
     def add(self, package):
         self.packages.append(package)
-        increment()
+        self.increment()
