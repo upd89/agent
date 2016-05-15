@@ -33,7 +33,9 @@ def new_task():
 
 if __name__ == "__main__":
     my_ip = lib.sysinfo.get_ip()
-    cert_file = cwd + '/certs/server.pem'
-    ca_file = cwd + '/certs/ca.crt'
+    capath = _config.getTlsPath()
+    key_file = capath + '/' + _config.getTlsPrivKey()
+    cert_file = capath + '/' + _config.getTlsPubCert()
+    ca_file = capath + '/' + _config.getTlsCa()
     daemon_run(host=my_ip, port=port, pidfile=pidfile, logfile=logfile,
-               cert_file=cert_file, ca_file=ca_file)
+               key_file=key_file, cert_file=cert_file, ca_file=ca_file)

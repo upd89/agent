@@ -42,9 +42,6 @@ class ConfigLoader:
     def getTlsPubCert(self):
         return(self.config['tls']['pubcert'])
 
-    def getTlsWebserverPem(self):
-        return(self.config['tls']['webserverpem'])
-
     def getApiVersion(self):
         return(self.config['api']['version'])
 
