@@ -103,6 +103,20 @@ def addUpdates(sys):
     return sys
 
 
+def addUpdatesIncremental(sys, requestedPackages):
+    print("Reading local cache...")
+    cache = _getCache()
+    print("Reading Upgradable Packages...")
+    for pkg in cache:
+        if (pkg.is_upgradable):
+            if (pkg.candidate.sha256 in requestedPackages):
+                sys.addUpdate(_buildUpdate(pkg))
+            else:
+                sys.increment()
+    cache.close()
+    return sys
+
+
 def getPackageHashList(knownHashes):
     cache = _getCache()
     packages = Packagelist()
@@ -122,6 +136,19 @@ def getPackageList():
     for pkg in cache:
         if (pkg.is_installed):
             packages.add(_buildPackage(pkg))
+    cache.close()
+    return packages
+
+
+def getPackageListIncremental(requestedPackages):
+    cache = _getCache()
+    packages = Packagelist()
+    for pkg in cache:
+        if (pkg.is_installed):
+            if (pkg.installed.sha256 in requestedPackages):
+                packages.add(_buildPackage(pkg))
+            else:
+                packages.increment()
     cache.close()
     return packages
 
