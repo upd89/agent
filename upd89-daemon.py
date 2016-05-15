@@ -19,12 +19,14 @@ def register():
 
 
 def refreshinstalled():
-    lib.mission.update_cache()
-    lib.mission.send_system_refreshinstalled(_config, _logger)
+    #lib.mission.send_system_refreshinstalled(_config, _logger)
+    lib.mission.send_system_refreshinstalled_hash(_config, _logger)
 
 
 def system_notify():
-    lib.mission.send_system_notify(_config, _logger)
+    lib.mission.update_cache()
+    #lib.mission.send_system_notify(_config, _logger)
+    lib.mission.send_system_notify_hash(_config, _logger)
 
 
 def do_update():
