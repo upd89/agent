@@ -33,4 +33,7 @@ def new_task():
 
 if __name__ == "__main__":
     my_ip = lib.sysinfo.get_ip()
-    daemon_run(host=my_ip, port=port, pidfile=pidfile, logfile=logfile)
+    cert_file = cwd + '/certs/server.pem'
+    ca_file = cwd + '/certs/ca.crt'
+    daemon_run(host=my_ip, port=port, pidfile=pidfile, logfile=logfile,
+               cert_file=cert_file, ca_file=ca_file)

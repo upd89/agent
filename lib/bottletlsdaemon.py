@@ -12,6 +12,13 @@ from contextlib import contextmanager
 
 
 class SSLWSGIRefServer(bottle.ServerAdapter):
+    def __init__(self, host='128.0.0.1', port=8080, cert_file='server.pem', ca_file='ca.crt', **options):
+        #super(SSLWSGIRefServer, self).__init__(host, port, options)
+        self.cert_file = cert_file
+        self.ca_file = ca_file
+        self.options = options
+        self.host = host
+        self.port = int(port)
 
     def run(self, handler):
         from wsgiref.simple_server import make_server, WSGIRequestHandler
@@ -25,8 +32,8 @@ class SSLWSGIRefServer(bottle.ServerAdapter):
         srv = make_server(self.host, self.port, handler, **self.options)
         srv.socket = ssl.wrap_socket(
             srv.socket,
-            certfile='/opt/upd89/agent/certs/server.pem',
-            ca_certs='/opt/upd89/agent/certs/ca.crt',
+            certfile=self.cert_file,
+            ca_certs=self.ca_file,
             cert_reqs=ssl.CERT_REQUIRED,
             server_side=True)
         srv.serve_forever()
@@ -51,7 +58,7 @@ def __locked_pidfile(filename):
     lock.release()
 
 
-def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None):
+def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None, cert_file='server.pem', ca_file='ca_file'):
     """
     Get the bottle 'run' function running in the background as a daemonized
     process.
@@ -89,7 +96,7 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None):
 
         with context:
             # bottle.run(host=host, port=port)
-            srv = SSLWSGIRefServer(host=host, port=port)
+            srv = SSLWSGIRefServer(host=host, port=port, cert_file=cert_file, ca_file=ca_file)
             bottle.run(server=srv)
     else:
         with open(pidfile, "r") as p:
