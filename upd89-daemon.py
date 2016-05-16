@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 from time import sleep
 from daemonize import Daemonize
 import schedule
@@ -19,13 +20,13 @@ def register():
 
 
 def refreshinstalled():
-    #lib.mission.send_system_refreshinstalled(_config, _logger)
+    # lib.mission.send_system_refreshinstalled(_config, _logger)
     lib.mission.send_system_refreshinstalled_hash(_config, _logger)
 
 
 def system_notify():
     lib.mission.update_cache()
-    #lib.mission.send_system_notify(_config, _logger)
+    # lib.mission.send_system_notify(_config, _logger)
     lib.mission.send_system_notify_hash(_config, _logger)
 
 
@@ -48,7 +49,13 @@ def main():
         sleep(5)
 
 
-daemon = Daemonize(app="test_app", pid=pid,
-                   action=main, keep_fds=log.getKeepfds())
-daemon.start()
-# main()
+if '-h' in sys.argv:
+    print("\n '--no-daemonize' do not run in background\n")
+    sys.exit()
+
+if '--no-daemonize' in sys.argv:
+    main()
+else:
+    daemon = Daemonize(app="test_app", pid=pid,
+                       action=main, keep_fds=log.getKeepfds())
+    daemon.start()
