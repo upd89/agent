@@ -30,5 +30,9 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
             self.sock = sock
             self._tunnel()
         # force Server Certificate Check
-        self.sock = ssl.wrap_socket(
-            sock, self.key_file, self.cert_file, ca_certs=self.ca_file, cert_reqs=ssl.CERT_REQUIRED)
+        self.sock = ssl.wrap_socket(sock,
+                                    keyfile=self.key_file,
+                                    certfile=self.cert_file,
+                                    ca_certs=self.ca_file,
+                                    cert_reqs=ssl.CERT_REQUIRED)
+
