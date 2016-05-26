@@ -32,7 +32,8 @@ def new_task():
 
 
 if __name__ == "__main__":
-    my_ip = lib.sysinfo.get_ip()
+    #my_ip = lib.sysinfo.get_ip()
+    my_ip = '0.0.0.0'
     capath = _config.getTlsPath()
     key_file = capath + '/' + _config.getTlsPrivKey()
     cert_file = capath + '/' + _config.getTlsPubCert()
