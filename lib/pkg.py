@@ -1,4 +1,5 @@
 import os
+os.putenv("DEBIAN_FRONTEND", "noninteractive")
 import sys
 import apt
 import apt_pkg
