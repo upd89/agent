@@ -14,22 +14,48 @@ from classes.task_notify import TaskNotify
 def _getCache():
     return apt.Cache(apt.progress.text.OpProgress())
 
+def _getBaseSha256(pkg):
+    pkg_base = pkg.versions[-1]
+    if (pkg_base.sha256 == ''):
+        pkg_arch = pkg.architecture()
+        return "no_hash_for_" + pkg.name + '_' + pkg_arch + '_' + pkg_base.version
+    else:
+        return pkg_base.sha256
+
+def _getInstalledSha256(pkg):
+    if (pkg.installed.sha256 == ''):
+        pkg_arch = pkg.architecture()
+        return "no_hash_for_" + pkg.name + '_' + pkg_arch + '_' + pkg.installed.version
+    else:
+        return pkg.installed.sha256
+
+def _getCandidateSha256(pkg):
+    if (pkg.candidate.sha256 == ''):
+        pkg_arch = pkg.architecture()
+        return "no_hash_for_" + pkg.name + '_' + pkg_arch + '_' + pkg.candidate.version
+    else:
+        return pkg.candidate.sha256
 
 def _buildPackage(pkg):
     pkg_origin = pkg.installed.origins[0]
     pkg_base = pkg.versions[-1]
     pkg_base_origin = pkg_base.origins[0]
+    pkg_arch = pkg.architecture()
+
+    inst_sha256 = _getInstalledSha256(pkg)
+    base_sha256 = _getBaseSha256(pkg)
 
     installed_repo = Repository(archive=pkg_origin.archive,
                                 origin=pkg_origin.origin,
                                 component=pkg_origin.component)
 
     installed_version = PackageVersion(version=pkg.installed.version,
-                                       sha256=pkg.installed.sha256,
-                                       arch=pkg.architecture(),
+                                       sha256=inst_sha256,
+                                       arch=pkg_arch,
                                        repository=installed_repo)
 
-    if (pkg.installed.sha256 == pkg_base.sha256):
+
+    if (base_sha256 == inst_sha256):
         is_base_version = True
         base_version = False
     else:
@@ -37,9 +63,10 @@ def _buildPackage(pkg):
         base_repo = Repository(archive=pkg_base_origin.archive,
                                origin=pkg_base_origin.origin,
                                component=pkg_base_origin.component)
+
         base_version = PackageVersion(version=pkg_base.version,
-                                      sha256=pkg_base.sha256,
-                                      arch=pkg.architecture(),
+                                      sha256=base_sha256,
+                                      arch=pkg_arch,
                                       repository=base_repo)
 
     package = Package(name=pkg.name, section=pkg.section,
@@ -55,16 +82,24 @@ def _buildPackage(pkg):
 def _buildUpdate(pkg):
     pkg_base = pkg.versions[-1]
     pkg_origin = pkg.versions[0].origins[0]
+    pkg_arch = pkg.architecture()
+
+    upd_sha256 = _getCandidateSha256(pkg)
+    base_sha256 = _getBaseSha256(pkg)
+
     candidate_repo = Repository(archive=pkg_origin.archive,
                                 origin=pkg_origin.origin,
                                 component=pkg_origin.component)
+
     candidate_version = PackageVersion(version=pkg.candidate.version,
-                                       sha256=pkg.candidate.sha256,
-                                       arch=pkg.architecture(),
+                                       sha256=upd_sha256,
+                                       arch=pkg_arch,
                                        repository=candidate_repo)
+
     update = Update(name=pkg.name,
                     candidate_version=candidate_version,
-                    baseversion_hash=pkg_base.sha256)
+                    baseversion_hash=base_sha256)
+
     return update
 
 
@@ -85,8 +120,9 @@ def addUpdateHashes(sys, knownHashes):
     print("Reading Upgradable Packages...")
     for pkg in cache:
         if (pkg.is_upgradable):
-            if not pkg.candidate.sha256 in knownHashes:
-                sys.addUpdate(pkg.candidate.sha256)
+            upd_sha256 = _getCandidateSha256(pkg)
+            if not upd_sha256 in knownHashes:
+                sys.addUpdate(upd_sha256)
             else:
                 sys.increment()
     cache.close()
@@ -110,7 +146,8 @@ def addUpdatesIncremental(sys, requestedPackages):
     print("Reading Upgradable Packages...")
     for pkg in cache:
         if (pkg.is_upgradable):
-            if (pkg.candidate.sha256 in requestedPackages):
+            upd_sha256 = _getCandidateSha256(pkg)
+            if (upd_sha256 in requestedPackages):
                 sys.addUpdate(_buildUpdate(pkg))
             else:
                 sys.increment()
@@ -123,8 +160,9 @@ def getPackageHashList(knownHashes):
     packages = Packagelist()
     for pkg in cache:
         if (pkg.is_installed):
-            if not pkg.installed.sha256 in knownHashes:
-                packages.add(pkg.installed.sha256)
+            inst_sha256 = _getInstalledSha256(pkg)
+            if not inst_sha256 in knownHashes:
+                packages.add(inst_sha256)
             else:
                 packages.increment()
     cache.close()
@@ -146,7 +184,8 @@ def getPackageListIncremental(requestedPackages):
     packages = Packagelist()
     for pkg in cache:
         if (pkg.is_installed):
-            if (pkg.installed.sha256 in requestedPackages):
+            inst_sha256 = _getInstalledSha256(pkg)
+            if (inst_sha256 in requestedPackages):
                 packages.add(_buildPackage(pkg))
             else:
                 packages.increment()
