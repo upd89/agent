@@ -100,7 +100,8 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None,
 
         with context:
             # bottle.run(host=host, port=port)
-            srv = SSLWSGIRefServer(host=host, port=port, key_file=key_file, cert_file=cert_file, ca_file=ca_file)
+            srv = SSLWSGIRefServer(host=host, port=port, key_file=key_file,
+                                   cert_file=cert_file, ca_file=ca_file)
             bottle.run(server=srv)
     else:
         with open(pidfile, "r") as p:

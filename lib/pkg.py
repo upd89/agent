@@ -18,21 +18,23 @@ def _getBaseSha256(pkg):
     pkg_base = pkg.versions[-1]
     if (pkg_base.sha256 == ''):
         pkg_arch = pkg.architecture()
-        return "no_hash_for_" + pkg.name + '_' + pkg_arch + '_' + pkg_base.version
+        return "no_hash_for_%s_%s_%s" % (pkg.name, pkg_arch, pkg_base.version)
     else:
         return pkg_base.sha256
 
 def _getInstalledSha256(pkg):
     if (pkg.installed.sha256 == ''):
         pkg_arch = pkg.architecture()
-        return "no_hash_for_" + pkg.name + '_' + pkg_arch + '_' + pkg.installed.version
+        return "no_hash_for_%s_%s_%s" % (pkg.name, pkg_arch,
+                                         pkg.installed.version)
     else:
         return pkg.installed.sha256
 
 def _getCandidateSha256(pkg):
     if (pkg.candidate.sha256 == ''):
         pkg_arch = pkg.architecture()
-        return "no_hash_for_" + pkg.name + '_' + pkg_arch + '_' + pkg.candidate.version
+        return "no_hash_for_%s_%s_%s" % (pkg.name, pkg_arch,
+                                         pkg.candidate.version)
     else:
         return pkg.candidate.sha256
 
