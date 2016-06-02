@@ -34,6 +34,7 @@ def send_system_refreshinstalled_hash(_config, _logger):
         known_packages.set_key(h.encode('ascii', 'ignore'), now)
         packages.packages.remove(h)
     print("unknown packages: %d" % len(packages.packages))
+    known_packages.close() # update 'known packages' after this?
 
     # sending full information for unknown packages
     if (len(packages.packages) > 0):
@@ -79,6 +80,7 @@ def send_system_notify_hash(_config, _logger):
         known_updates.set_key(h.encode('ascii', 'ignore'), now)
         sys.packageUpdates.remove(h)
     print("unknown updates: %d" % len(sys.packageUpdates))
+    known_packages.close() # update 'known updates' after this?
 
     # sending full information for unknown updates
     if (len(sys.packageUpdates) > 0):
