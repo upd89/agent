@@ -21,6 +21,6 @@ check_for('daemonize')          # sudo apt install python-daemonize
 check_for('schedule')           # sudo pip install schedule
 check_for('configparser')       # sudo apt install python-configparser
 check_for('bottle')             # sudo pip install bottle
-check_for('bottledaemon')       # sudo pip install bottledaemon
+#check_for('bottledaemon')       # sudo pip install bottledaemon
 
 print("checks done.")
