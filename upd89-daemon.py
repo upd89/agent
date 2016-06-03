@@ -53,6 +53,9 @@ if '-h' in sys.argv:
     print("\n '--no-daemonize' do not run in background\n")
     sys.exit()
 
+from subprocess import call
+call(["./websrv.py", "start"])
+
 if '--no-daemonize' in sys.argv:
     main()
 else:
