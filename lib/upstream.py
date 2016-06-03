@@ -5,32 +5,32 @@ from classes.encoder import MyEncoder
 from lib.httpsclientauthconnection import HTTPSClientAuthConnection
 
 
-def __getBasePath(_config):
-    return "/api" + _config.getApiVersion()
+def __getBasePath():
+    return "/api/v2"
 
 
 def getRegisterPath(_config):
-    return __getBasePath(_config) + "/register"
+    return __getBasePath() + "/register"
 
 
 def getSystemNotifyPath(_config, urn):
-    return __getBasePath(_config) + "/system/" + urn + "/notify"
+    return __getBasePath() + "/system/" + urn + "/notify"
 
 
 def getSystemNotifyHashPath(_config, urn):
-    return __getBasePath(_config) + "/system/" + urn + "/notify-hash"
+    return __getBasePath() + "/system/" + urn + "/notify-hash"
 
 
 def getSystemRefreshInstalledPath(_config, urn):
-    return __getBasePath(_config) + "/system/" + urn + "/refresh-installed"
+    return __getBasePath() + "/system/" + urn + "/refresh-installed"
 
 
 def getSystemRefreshInstalledHashPath(_config, urn):
-    return __getBasePath(_config) + "/system/" + urn + "/refresh-installed-hash"
+    return __getBasePath() + "/system/" + urn + "/refresh-installed-hash"
 
 
 def getTaskNotifyPath(_config, taskid):
-    return __getBasePath(_config) + "/task/" + taskid + "/notify"
+    return __getBasePath() + "/task/" + taskid + "/notify"
 
 
 def push(_config, path, data):
