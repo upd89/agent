@@ -80,7 +80,7 @@ def send_system_notify_hash(_config, _logger):
         known_updates.set_key(h.encode('ascii', 'ignore'), now)
         sys.packageUpdates.remove(h)
     print("unknown updates: %d" % len(sys.packageUpdates))
-    known_packages.close() # update 'known updates' after this?
+    known_updates.close() # update 'known updates' after this?
 
     # sending full information for unknown updates
     if (len(sys.packageUpdates) > 0):
