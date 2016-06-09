@@ -3,5 +3,7 @@
 *.log
 *.pid
 *.data
+bin/*
+build/*
 certs/*
 pip/*
