@@ -3,7 +3,6 @@
 import apt
 
 cache = apt.Cache()
-
 cache.update()
 
 for pkg in cache:
