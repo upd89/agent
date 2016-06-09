@@ -54,7 +54,7 @@ if '-h' in sys.argv:
     sys.exit()
 
 from subprocess import call
-call(["./websrv.py", "start"])
+call(["/usr/bin/env", "python", "upd89-websrv.py", "start"])
 
 if '--no-daemonize' in sys.argv:
     main()

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir pip
+mkdir -p pip
 
 pip install --target=pip bottle
 pip install --target=pip configparser
