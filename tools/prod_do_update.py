@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import syspath
 from lib.configloader import ConfigLoader
 import lib.log
 
@@ -28,7 +29,7 @@ class RedirectStdStreams(object):
         sys.stdout = self.old_stdout
         sys.stderr = self.old_stderr
 
-_config = ConfigLoader("config")
+_config = ConfigLoader(syspath.cmd_folder + "/config")
 _logger = lib.log.screenLog()
 
 mem_log = StringIO()
