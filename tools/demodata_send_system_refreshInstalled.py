@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import syspath
-from lib.configloader import ConfigLoader
+from upd89.lib.configloader import ConfigLoader
 import demodata
-import lib.upstream
+import upd89.lib.upstream
 
 _config = ConfigLoader("../config")
 
@@ -12,5 +12,5 @@ hostname = demodata.hostname
 packages = demodata.packages
 
 print("Sending to server (refreshInstalled " + hostname + ")...")
-response = lib.upstream.pushSystemRefreshInstalled(_config, hostname, packages)
+response = upd89.lib.upstream.pushSystemRefreshInstalled(_config, hostname, packages)
 print("Response:\n" + response)

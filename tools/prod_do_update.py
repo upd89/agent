@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import syspath
-from lib.configloader import ConfigLoader
-import lib.log
+from upd89.lib.configloader import ConfigLoader
+import upd89.lib.log
 
 import sys
 import os
@@ -30,14 +30,14 @@ class RedirectStdStreams(object):
         sys.stderr = self.old_stderr
 
 _config = ConfigLoader(syspath.cmd_folder + "/config")
-_logger = lib.log.screenLog()
+_logger = upd89.lib.log.screenLog()
 
 mem_log = StringIO()
 
 with RedirectStdStreams(stdout=mem_log, stderr=mem_log):
     print("RedirectStdStream...")
-    import lib.mission
-    lib.mission.do_update(_config, _logger)
+    import upd89.lib.mission
+    upd89.lib.mission.do_update(_config, _logger)
 
 print("--")
 print(mem_log.getvalue())

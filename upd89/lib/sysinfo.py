@@ -2,8 +2,7 @@ import os
 import platform
 import socket
 
-import classes.system_register
-import classes.system_notify
+from upd89.classes import system_register, system_notify
 
 
 def get_hostname():
@@ -48,7 +47,7 @@ def get_register_system(port="8080"):
     myDistro = get_distro()
     myIP = get_ip()
     myAddress = get_fqdn() + ":" + port
-    return classes.system_register.System(name=myHostname, urn=myURN,
+    return system_register.System(name=myHostname, urn=myURN,
                                           os=myDistro, address=myAddress, tag="")
 
 
@@ -59,6 +58,6 @@ def get_notify_system(port="8080"):
     myIP = get_ip()
     myAddress = get_fqdn() + ":" + port
     needReboot = get_reboot_required()
-    return classes.system_notify.System(name=myHostname, urn=myURN,
+    return system_notify.System(name=myHostname, urn=myURN,
                                         os=myDistro, address=myAddress,
                                         reboot_required=needReboot)

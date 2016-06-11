@@ -4,9 +4,9 @@ import sys
 
 import syspath
 from random import randint
-from lib.configloader import ConfigLoader
+from upd89.lib.configloader import ConfigLoader
 import demodata
-import lib.upstream
+import upd89.lib.upstream
 
 _config = ConfigLoader("../config")
 
@@ -24,5 +24,5 @@ if '--random' in sys.argv:
 
 
 print("Sending to server (register " + reg_sys.name + ")...")
-response = lib.upstream.pushRegister(_config, reg_sys)
+response = upd89.lib.upstream.pushRegister(_config, reg_sys)
 print("Response:\n" + response)
