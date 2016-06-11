@@ -3,12 +3,12 @@ os.putenv("DEBIAN_FRONTEND", "noninteractive")
 import sys
 import apt
 import apt_pkg
-from classes.update import Update
-from classes.package import Package
-from classes.packagelist import Packagelist
-from classes.repository import Repository
-from classes.package_version import PackageVersion
-from classes.task_notify import TaskNotify
+from upd89.classes.update import Update
+from upd89.classes.package import Package
+from upd89.classes.packagelist import Packagelist
+from upd89.classes.repository import Repository
+from upd89.classes.package_version import PackageVersion
+from upd89.classes.task_notify import TaskNotify
 
 
 def _getCache():

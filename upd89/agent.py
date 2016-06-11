@@ -1,38 +1,43 @@
 #!/usr/bin/env python
 
+import os
 import sys
+import argparse
 from time import sleep
 from daemonize import Daemonize
 import schedule
 
 from lib.configloader import ConfigLoader
-import lib.mission
+from lib import mission
 import lib.log
 
-_config = ConfigLoader("config")
-log = lib.log.Log(_config)
-_logger = log.getLogger()
-pid = _config.getPidFile()
+
+def _load_config(configfile):
+    global _config, _log, _logger, _pid
+    _config = ConfigLoader(configfile)
+    _log = lib.log.Log(_config)
+    _logger = _log.getLogger()
+    _pid = _config.getPidFile()
 
 
 def register():
-    lib.mission.send_register(_config, _logger)
+    mission.send_register(_config, _logger)
 
 
 def refreshinstalled():
-    # lib.mission.send_system_refreshinstalled(_config, _logger)
-    lib.mission.send_system_refreshinstalled_hash(_config, _logger)
+    # mission.send_system_refreshinstalled(_config, _logger)
+    mission.send_system_refreshinstalled_hash(_config, _logger)
 
 
 def system_notify():
-    lib.mission.update_cache()
-    # lib.mission.send_system_notify(_config, _logger)
-    lib.mission.send_system_notify_hash(_config, _logger)
+    mission.update_cache()
+    # mission.send_system_notify(_config, _logger)
+    mission.send_system_notify_hash(_config, _logger)
 
 
 def do_update():
     #_logger.debug("Checking for new Tasks...")
-    lib.mission.do_update(_config, _logger)
+    mission.do_update(_config, _logger)
 
 
 def main():
@@ -49,16 +54,31 @@ def main():
         sleep(5)
 
 
-if '-h' in sys.argv:
-    print("\n '--no-daemonize' do not run in background\n")
-    sys.exit()
+def start(configfile):
+    _load_config(configfile)
 
-from subprocess import call
-call(["/usr/bin/env", "python", "upd89-websrv.py", "start"])
+    newpid = os.fork()
+    if newpid == 0:
+        import websrv
+        websrv.start(_config)
+    else:
+        daemon = Daemonize(app="test_app", pid=_pid, action=main,
+                           keep_fds=_log.getKeepfds())
+        daemon.start()
 
-if '--no-daemonize' in sys.argv:
+
+def stop(configfile):
+    _load_config(configfile)
+
+    import websrv
+    websrv.stop(_config)
+
+    with open(_pid, "r") as p:
+        pid = int(p.read())
+        os.kill(pid, signal.SIGTERM)
+
+
+def debug(configfile):
+    _load_config(configfile)
     main()
-else:
-    daemon = Daemonize(app="test_app", pid=pid,
-                       action=main, keep_fds=log.getKeepfds())
-    daemon.start()
+

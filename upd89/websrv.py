@@ -4,16 +4,6 @@ from lib.bottletlsdaemon import daemon_run
 from bottle import get, post, request, run, abort, redirect
 import json
 import lib.persist
-import lib.sysinfo
-from lib.configloader import ConfigLoader
-
-_config = ConfigLoader("websrv.ini")
-port = _config.getWebserverPort()
-logfile = _config.getWebserverLogfile()
-pidfile = _config.getWebserverPidfile()
-
-import os
-cwd = os.getcwd()
 
 
 @get('/')
@@ -31,12 +21,42 @@ def new_task():
     return("ok")
 
 
-if __name__ == "__main__":
-    #my_ip = lib.sysinfo.get_ip()
-    my_ip = '0.0.0.0'
-    capath = _config.getTlsPath()
-    key_file = capath + '/' + _config.getTlsPrivKey()
-    cert_file = capath + '/' + _config.getTlsPubCert()
-    ca_file = capath + '/' + _config.getTlsCa()
-    daemon_run(host=my_ip, port=port, pidfile=pidfile, logfile=logfile,
-               key_file=key_file, cert_file=cert_file, ca_file=ca_file)
+def start(config=None):
+    if config == None:
+        daemon_run(
+            host     = '0.0.0.0',
+            port     = os.environ["UPD89_WEBSRV_PORT"],
+            pidfile  = os.environ["UPD89_WEBSRV_PIDFILE"],
+            logfile  = os.environ["UPD89_WEBSRV_LOGFILE"],
+            keyfile  = os.environ["UPD89_WEBSRV_KEYFILE"],
+            certfile = os.environ["UPD89_WEBSRV_CERTFILE"],
+            cafile   = os.environ["UPD89_WEBSRV_CAFILE"],
+            action   = "start"
+        )
+    else:
+        cpath = config.getTlsPath()
+        daemon_run(
+            host     = '0.0.0.0',
+            port     = config.getWebserverPort(),
+            pidfile  = config.getWebserverPidfile(),
+            logfile  = config.getWebserverLogfile(),
+            keyfile  = cpath + '/' + config.getTlsPrivKey(),
+            certfile = cpath + '/' + config.getTlsPubCert(),
+            cafile   = cpath + '/' + config.getTlsCa(),
+            action   = "start"
+        )
+
+
+def stop(config=None):
+    if config == None:
+        daemon_run(
+            pidfile = os.environ["UPD89_WEBSRV_PIDFILE"],
+            action  = "stop"
+        )
+    else:
+        daemon_run(
+            pidfile = config.getWebserverPidfile(),
+            action  = "stop"
+        )
+
+

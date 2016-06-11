@@ -2,9 +2,9 @@
 
 import syspath
 import json
-import lib.persist
+import upd89.lib.persist
 
-tasks = lib.persist.Persist(syspath.cmd_folder + "tasks.data")
+tasks = upd89.lib.persist.Persist(syspath.cmd_folder + "tasks.data")
 
 for key in tasks.get_keys():
     print key

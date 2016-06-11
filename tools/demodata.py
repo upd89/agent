@@ -1,10 +1,10 @@
-from classes.system_register import System as RegisterSystem
-from classes.system_notify import System as NotifySystem
-from classes.update import Update
-from classes.package_version import PackageVersion
-from classes.repository import Repository
-from classes.packagelist import Packagelist
-from classes.package import Package
+from upd89.classes.system_register import System as RegisterSystem
+from upd89.classes.system_notify import System as NotifySystem
+from upd89.classes.update import Update
+from upd89.classes.package_version import PackageVersion
+from upd89.classes.repository import Repository
+from upd89.classes.packagelist import Packagelist
+from upd89.classes.package import Package
 
 
 hostname = "demo-vm"

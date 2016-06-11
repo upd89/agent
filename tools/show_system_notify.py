@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 
 import syspath
-from classes.encoder import MyEncoder
-from lib.configloader import ConfigLoader
-import lib.sysinfo
-import lib.pkg
-import lib.log
+from upd89.classes.encoder import MyEncoder
+from upd89.lib.configloader import ConfigLoader
+import upd89.lib.sysinfo
+import upd89.lib.pkg
+import upd89.lib.log
 import json
 
 
 _config = ConfigLoader("config")
-_logger = lib.log.screenLog()
+_logger = upd89.lib.log.screenLog()
 
 
-sys = lib.sysinfo.get_notify_system()
-sys = lib.pkg.addUpdates(sys)
+sys = upd89.lib.sysinfo.get_notify_system()
+sys = upd89.lib.pkg.addUpdates(sys)
 jsondata = json.dumps(sys, cls=MyEncoder)
 
 print(jsondata)

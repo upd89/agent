@@ -12,12 +12,12 @@ from contextlib import contextmanager
 
 
 class SSLWSGIRefServer(bottle.ServerAdapter):
-    def __init__(self, host='128.0.0.1', port=8080, key_file='priv.key',
-                 cert_file='pub.crt', ca_file='ca.crt', **options):
+    def __init__(self, host='128.0.0.1', port=8080, keyfile='priv.key',
+                 certfile='pub.crt', cafile='ca.crt', **options):
         #super(SSLWSGIRefServer, self).__init__(host, port, options)
-        self.key_file = key_file
-        self.cert_file = cert_file
-        self.ca_file = ca_file
+        self.keyfile = keyfile
+        self.certfile = certfile
+        self.cafile = cafile
         self.options = options
         self.host = host
         self.port = int(port)
@@ -34,9 +34,9 @@ class SSLWSGIRefServer(bottle.ServerAdapter):
         srv = make_server(self.host, self.port, handler, **self.options)
         srv.socket = ssl.wrap_socket(
             srv.socket,
-            keyfile=self.key_file,
-            certfile=self.cert_file,
-            ca_certs=self.ca_file,
+            keyfile=self.keyfile,
+            certfile=self.certfile,
+            ca_certs=self.cafile,
             cert_reqs=ssl.CERT_REQUIRED,
             server_side=True)
         srv.serve_forever()
@@ -62,7 +62,8 @@ def __locked_pidfile(filename):
 
 
 def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None,
-               key_file='priv.key', cert_file='pub.crt', ca_file='ca.crt'):
+               keyfile='priv.key', certfile='pub.crt', cafile='ca.crt',
+               action="start"):
     """
     Get the bottle 'run' function running in the background as a daemonized
     process.
@@ -74,9 +75,6 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None,
     :logfile: The file to log stdout and stderr from bottle to. Defaults to "bottle.log"
 
     """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=["start", "stop"])
-    args = parser.parse_args()
 
     if pidfile is None:
         pidfile = os.path.join(
@@ -90,7 +88,7 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None,
             "bottle.log"
         )
 
-    if args.action == "start":
+    if action == "start":
         log = open(logfile, "w+")
         context = daemon.DaemonContext(
             pidfile=__locked_pidfile(pidfile),
@@ -100,8 +98,8 @@ def daemon_run(host="localhost", port="8080", pidfile=None, logfile=None,
 
         with context:
             # bottle.run(host=host, port=port)
-            srv = SSLWSGIRefServer(host=host, port=port, key_file=key_file,
-                                   cert_file=cert_file, ca_file=ca_file)
+            srv = SSLWSGIRefServer(host=host, port=port, keyfile=keyfile,
+                                   certfile=certfile, cafile=cafile)
             bottle.run(server=srv)
     else:
         with open(pidfile, "r") as p:

@@ -1,8 +1,8 @@
 import json
 import urllib2
 
-from classes.encoder import MyEncoder
-from lib.httpsclientauthconnection import HTTPSClientAuthConnection
+from upd89.classes.encoder import MyEncoder
+from upd89.lib.httpsclientauthconnection import HTTPSClientAuthConnection
 
 
 def __getBasePath():

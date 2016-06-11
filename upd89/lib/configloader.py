@@ -5,9 +5,13 @@ import os.path
 class ConfigLoader:
 
     def __init__(self, configname):
-        self.config = configparser.ConfigParser()
-        self.configname = configname
-        self.config.read(self.configname)
+        if os.path.isfile(configname):
+            self.config = configparser.ConfigParser()
+            self.configname = configname
+            self.config.read(self.configname)
+        else:
+            print("Configfile (%s) not found." % configname)
+            exit(1)
 
     def __str__(self):
         return repr(self)

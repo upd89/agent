@@ -1,30 +1,27 @@
 import json
-import lib.persist
-import lib.upstream
-import lib.sysinfo
-import lib.pkg
 import datetime
+from upd89.lib import persist, upstream, sysinfo, pkg
 
 
 def update_cache():
-    lib.pkg.updateCache()
+    pkg.updateCache()
 
 
 def send_register(_config, _logger):
-    sys = lib.sysinfo.get_register_system()
+    sys = sysinfo.get_register_system()
     _logger.debug("Sending to server (register %s)..." %
-                  lib.sysinfo.get_hostname())
-    response = lib.upstream.pushRegister(_config, sys)
+                  sysinfo.get_hostname())
+    response = upstream.pushRegister(_config, sys)
     _logger.debug("Response: " + response)
     _config.set_registered()
 
 
 def send_system_refreshinstalled_hash(_config, _logger):
-    known_packages = lib.persist.Persist("/opt/upd89/agent/known_packages.data")
-    packages = lib.pkg.getPackageHashList(known_packages.get_keys())
+    known_packages = persist.Persist("/opt/upd89/agent/known_packages.data")
+    packages = pkg.getPackageHashList(known_packages.get_keys())
     _logger.debug("Sending to server (refreshInstalledHash %s)..." %
-                  lib.sysinfo.get_hostname())
-    response = lib.upstream.pushSystemRefreshInstalledHash(_config, lib.sysinfo.get_urn(), packages)
+                  sysinfo.get_hostname())
+    response = upstream.pushSystemRefreshInstalledHash(_config, sysinfo.get_urn(), packages)
     _logger.debug("Response: " + response)
 
     j = json.loads(response)
@@ -38,39 +35,39 @@ def send_system_refreshinstalled_hash(_config, _logger):
 
     # sending full information for unknown packages
     if (len(packages.packages) > 0):
-        complete_packages = lib.pkg.getPackageListIncremental(packages.packages)
+        complete_packages = pkg.getPackageListIncremental(packages.packages)
         _logger.debug("Sending to server (refreshInstalled %s)..." %
-                      lib.sysinfo.get_hostname())
-        response = lib.upstream.pushSystemRefreshInstalled(_config, lib.sysinfo.get_urn(), complete_packages)
+                      sysinfo.get_hostname())
+        response = upstream.pushSystemRefreshInstalled(_config, sysinfo.get_urn(), complete_packages)
         _logger.debug("Response: " + response)
         j = json.loads(response)
 
     # sending full list if we had a count mismatch
     if j.get("status") == "countMismatch":
-        packages = lib.pkg.getPackageHashList(list())
+        packages = pkg.getPackageHashList(list())
         _logger.debug("Sending to server (refreshInstalledHash after countMismatch %s)..." %
-                       lib.sysinfo.get_hostname())
-        response = lib.upstream.pushSystemRefreshInstalledHash(_config, lib.sysinfo.get_urn(), packages)
+                       sysinfo.get_hostname())
+        response = upstream.pushSystemRefreshInstalledHash(_config, sysinfo.get_urn(), packages)
         _logger.debug("Response: " + response)
         j = json.loads(response)
         print(j.get("status"))
 
 
 def send_system_refreshinstalled(_config, _logger):
-    packages = lib.pkg.getPackageList()
+    packages = pkg.getPackageList()
     _logger.debug("Sending to server (refreshInstalled %s)..." %
-                  lib.sysinfo.get_hostname())
-    response = lib.upstream.pushSystemRefreshInstalled(_config, lib.sysinfo.get_urn(), packages)
+                  sysinfo.get_hostname())
+    response = upstream.pushSystemRefreshInstalled(_config, sysinfo.get_urn(), packages)
     _logger.debug("Response: " + response)
 
 
 def send_system_notify_hash(_config, _logger):
-    known_updates = lib.persist.Persist("/opt/upd89/agent/known_updates.data")
-    sys = lib.sysinfo.get_notify_system()
-    sys = lib.pkg.addUpdateHashes(sys, known_updates.get_keys())
+    known_updates = persist.Persist("/opt/upd89/agent/known_updates.data")
+    sys = sysinfo.get_notify_system()
+    sys = pkg.addUpdateHashes(sys, known_updates.get_keys())
     _logger.debug("Sending to server (notifyHash %s)..." %
-                  lib.sysinfo.get_hostname())
-    response = lib.upstream.pushSystemNotifyHash(_config, lib.sysinfo.get_urn(), sys)
+                  sysinfo.get_hostname())
+    response = upstream.pushSystemNotifyHash(_config, sysinfo.get_urn(), sys)
     _logger.debug("Response: " + response)
 
     j = json.loads(response)
@@ -84,36 +81,36 @@ def send_system_notify_hash(_config, _logger):
 
     # sending full information for unknown updates
     if (len(sys.packageUpdates) > 0):
-        complete_sys = lib.sysinfo.get_notify_system()
-        complete_sys = lib.pkg.addUpdatesIncremental(complete_sys, sys.packageUpdates)
+        complete_sys = sysinfo.get_notify_system()
+        complete_sys = pkg.addUpdatesIncremental(complete_sys, sys.packageUpdates)
         _logger.debug("Sending to server (notify %s)..." %
-                      lib.sysinfo.get_hostname())
-        response = lib.upstream.pushSystemNotify(_config, lib.sysinfo.get_urn(), complete_sys)
+                      sysinfo.get_hostname())
+        response = upstream.pushSystemNotify(_config, sysinfo.get_urn(), complete_sys)
         _logger.debug("Response: " + response)
         j = json.loads(response)
 
     # sending full list if we had a count mismatch
     if j.get("status") == "countMismatch":
-        sys = lib.sysinfo.get_notify_system()
-        sys = lib.pkg.addUpdateHashes(sys, list())
+        sys = sysinfo.get_notify_system()
+        sys = pkg.addUpdateHashes(sys, list())
         _logger.debug("Sending to server (notifyHash after countMismatch %s)..." %
-                      lib.sysinfo.get_hostname())
-        response = lib.upstream.pushSystemNotifyHash(_config, lib.sysinfo.get_urn(), sys)
+                      sysinfo.get_hostname())
+        response = upstream.pushSystemNotifyHash(_config, sysinfo.get_urn(), sys)
         _logger.debug("Response: " + response)
         j = json.loads(response)
         print(j.get("status"))
 
 
 def send_system_notify(_config, _logger):
-    sys = lib.sysinfo.get_notify_system()
-    sys = lib.pkg.addUpdates(sys)
-    _logger.debug("Sending to server (notify %s)..." % lib.sysinfo.get_hostname())
-    response = lib.upstream.pushSystemNotify(_config, lib.sysinfo.get_urn(), sys)
+    sys = sysinfo.get_notify_system()
+    sys = pkg.addUpdates(sys)
+    _logger.debug("Sending to server (notify %s)..." % sysinfo.get_hostname())
+    response = upstream.pushSystemNotify(_config, sysinfo.get_urn(), sys)
     _logger.debug("Response: " + response)
 
 
 def do_update(_config, _logger):
-    tasks = lib.persist.Persist("/opt/upd89/agent/tasks.data")
+    tasks = persist.Persist("/opt/upd89/agent/tasks.data")
     for key in tasks.get_keys():
         json_data = tasks.get_key(key)
         _logger.debug(u"key: %s - json: %s" % (key, json_data))
@@ -123,8 +120,8 @@ def do_update(_config, _logger):
             pkg_name = p.get("pkg_name")
             pkg_version = p.get("pdk_version")
             p_list.append(pkg_name)
-        tasknotify = lib.pkg.do_update(p_list)
-        response = lib.upstream.pushTaskNotify(_config, key, tasknotify)
+        tasknotify = pkg.do_update(p_list)
+        response = upstream.pushTaskNotify(_config, key, tasknotify)
         _logger.debug("Response: " + response)
         tasks.delete_key(key)
     tasks.close()
