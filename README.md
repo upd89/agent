@@ -8,14 +8,18 @@ upd89 is a system update management for debian based systems.
 
 this upd89-agent is a python module, it's depending on the python-apt package
 
-## Installation
+## Installation from github
 
 	apt install python-apt python-daemonize python-configparser
 	git clone https://github.com/upd89/agent.git
 	python setup.py build
 	python setup.py install
-	pdate-rc.d upd89 defaults
+	update-rc.d upd89 defaults
 
+## Installation from pip
+
+	pip install upd89
+	update-rc.d upd89 defaults
 
 ## Configuration
 
