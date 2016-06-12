@@ -6,6 +6,7 @@ upd89 is a system update management for debian based systems.
 
 ## Dependencies
 
+	this upd89-agent is a python module, it's depending on the python-apt package
 
 ## Installation
 
