@@ -8,5 +8,8 @@ if 'start' in sys.argv:
 elif 'stop' in sys.argv:
     import upd89.agent
     upd89.agent.stop("/etc/upd89/config.ini")
+elif 'debug' in sys.argv:
+    import upd89.agent
+    upd89.agent.debug("/etc/upd89/config.ini")
 else:
     print("Usage: upd89 start|stop")

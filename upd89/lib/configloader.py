@@ -43,6 +43,9 @@ class ConfigLoader:
     def getTlsPubCert(self):
         return(self.config['tls']['pubcert'])
 
+    def getDataDir(self):
+        return(self.config['agent']['datadir'])
+
     def getLogFile(self):
         return(self.config['agent']['logfile'])
 
