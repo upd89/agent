@@ -2,6 +2,7 @@
 
 import os
 import sys
+import signal
 import argparse
 from time import sleep
 from daemonize import Daemonize

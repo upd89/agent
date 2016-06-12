@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name = "upd89",
-    version = "0.5.21",
+    version = "0.5.22",
     author = "Ueli Bosshard",
     author_email = "ubosshard@gmail.com",
     description = ("upd89 is a system update management "
