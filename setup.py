@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name = "upd89",
-    version = "0.5.10",
+    version = "0.5.12",
     author = "Ueli Bosshard",
     author_email = "ubosshard@gmail.com",
     description = ("upd89 is a system update management "
@@ -21,6 +21,11 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
     ],
+    install_requires=[
+        'daemonize',
+        'schedule',
+        'configparser',
+        'bottle',
+    ],
 )
-
 

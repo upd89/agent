@@ -11,6 +11,8 @@ upd89 is a system update management for debian based systems.
 
 	apt install python-apt python-daemonize python-configparser
 	git clone https://github.com/upd89/agent.git
+	python setup.py build
+	python setup.py install
 
 
 ## Configuration
