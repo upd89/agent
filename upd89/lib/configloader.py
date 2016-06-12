@@ -25,14 +25,11 @@ class ConfigLoader:
     def getWebserverPidfile(self):
         return(self.config['webserver']['pidfile'])
 
-    def getServerURL(self):
-        return(self.config['server']['url'])
-
     def getServerHost(self):
-        return(self.config['server']['host'])
+        return(self.config['controlcenter']['host'])
 
     def getServerPort(self):
-        return(self.config['server']['port'])
+        return(self.config['controlcenter']['port'])
 
     def getTlsPath(self):
         return(self.config['tls']['path'])
@@ -47,16 +44,16 @@ class ConfigLoader:
         return(self.config['tls']['pubcert'])
 
     def getLogFile(self):
-        return(self.config['log']['file'])
+        return(self.config['agent']['logfile'])
 
     def getPidFile(self):
-        return(self.config['daemon']['pidfile'])
+        return(self.config['agent']['pidfile'])
 
     def is_registered(self):
-        return self.__ret_if_exists('server', 'registered') == "true"
+        return self.__ret_if_exists('controlcenter', 'registered') == "true"
 
     def set_registered(self):
-        self.__set_config('server', 'registered', "true")
+        self.__set_config('controlcenter', 'registered', "true")
 
     def reloadConfig(self):
         self.config.read(self.configname)
