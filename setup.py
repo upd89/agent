@@ -12,7 +12,7 @@ setup(
                    "for debian based systems."),
     license = "MIT",
     keywords = "upd89 system update orchestration",
-    url = "http://packages.python.org/upd89",
+    url = "http://upd89.org",
     packages = ['upd89', 'upd89.classes', 'upd89.lib'],
     scripts=['bin/upd89'],
     data_files=[
