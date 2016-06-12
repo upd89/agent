@@ -1,0 +1,2 @@
+include etc/config.ini
+include init-script/upd89
