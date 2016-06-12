@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name = "upd89",
-    version = "0.5.14",
+    version = "0.5.15",
     author = "Ueli Bosshard",
     author_email = "ubosshard@gmail.com",
     description = ("upd89 is a system update management "
@@ -15,6 +15,10 @@ setup(
     url = "http://packages.python.org/upd89",
     packages = ['upd89', 'upd89.classes', 'upd89.lib'],
     scripts=['bin/upd89'],
+    data_files=[
+        ('/etc/upd89', ['etc/config.ini']),
+        ('/etc/init.d', ['init-script/upd89']),
+    ],
     long_description='upd89 is a system update management ' +
         'for debian based systems.',
     classifiers=[
