@@ -17,7 +17,7 @@ def send_register(_config, _logger):
 
 
 def send_system_refreshinstalled_hash(_config, _logger):
-    known_packages = persist.Persist("/opt/upd89/agent/known_packages.data")
+    known_packages = persist.Persist(_config.getDataDir() + "/known_packages.data")
     packages = pkg.getPackageHashList(known_packages.get_keys())
     _logger.debug("Sending to server (refreshInstalledHash %s)..." %
                   sysinfo.get_hostname())
@@ -62,7 +62,7 @@ def send_system_refreshinstalled(_config, _logger):
 
 
 def send_system_notify_hash(_config, _logger):
-    known_updates = persist.Persist("/opt/upd89/agent/known_updates.data")
+    known_updates = persist.Persist(_config.getDataDir() + "/known_updates.data")
     sys = sysinfo.get_notify_system()
     sys = pkg.addUpdateHashes(sys, known_updates.get_keys())
     _logger.debug("Sending to server (notifyHash %s)..." %
@@ -110,7 +110,7 @@ def send_system_notify(_config, _logger):
 
 
 def do_update(_config, _logger):
-    tasks = persist.Persist("/opt/upd89/agent/tasks.data")
+    tasks = persist.Persist(_config.getDataDir() + "/tasks.data")
     for key in tasks.get_keys():
         json_data = tasks.get_key(key)
         _logger.debug(u"key: %s - json: %s" % (key, json_data))
