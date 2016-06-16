@@ -14,7 +14,6 @@ def index():
 @post('/task')
 def new_task():
     tasks = lib.persist.Persist(cwd + "/tasks.data")
-    # TODO: Test if json is valid
     data = json.load(request.body)
     tasks.set_key(data.get('task_id').encode("utf8"), request.body.read())
     tasks.close()
