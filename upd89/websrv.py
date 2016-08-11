@@ -2,6 +2,7 @@
 
 from lib.bottletlsdaemon import daemon_run
 from bottle import get, post, request, run, abort, redirect
+import os
 import json
 import lib.persist
 
@@ -13,7 +14,7 @@ def index():
 
 @post('/task')
 def new_task():
-    cwd = os.environ.get['UPD89_DATADIR', '/etc/upd89']
+    cwd = os.getenv['UPD89_DATADIR', '/etc/upd89']
     tasks = lib.persist.Persist(cwd + "/tasks.data")
     data = json.load(request.body)
     tasks.set_key(data.get('task_id').encode("utf8"), request.body.read())
