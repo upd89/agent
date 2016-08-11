@@ -57,6 +57,7 @@ def main():
 
 def start(configfile):
     _load_config(configfile)
+    os.environ["UPD89_DATADIR"] = _config.getDataDir()
 
     newpid = os.fork()
     if newpid == 0:
